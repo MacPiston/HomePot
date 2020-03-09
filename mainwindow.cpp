@@ -20,8 +20,8 @@ MainWindow::MainWindow(QWidget *parent)
     chart->addSeries(series);
     chart->legend()->hide();
 
-    ui->chartview->setChart(chart);
-    ui->chartview->setRenderHint(QPainter::Antialiasing);
+    ui->chartViewExpense->setChart(chart);
+    ui->chartViewExpense->setRenderHint(QPainter::Antialiasing);
 }
 
 MainWindow::~MainWindow()
