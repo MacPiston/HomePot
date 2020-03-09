@@ -41,7 +41,7 @@
       </property>
       <layout class="QHBoxLayout" name="budgetHorizontalLayout">
        <item>
-        <widget class="QLabel" name="budgetStatusLabel">
+        <widget class="QLabel" name="budgetNameLabel">
          <property name="font">
           <font>
            <pointsize>17</pointsize>
@@ -56,7 +56,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="budgetNameLabel">
+        <widget class="QLabel" name="budgetStatusLabel">
          <property name="frameShape">
           <enum>QFrame::NoFrame</enum>
          </property>
@@ -192,6 +192,9 @@
         <layout class="QHBoxLayout" name="totalIncomeHorizontal">
          <item>
           <widget class="QLabel" name="totalIncome">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>Total Income</string>
            </property>
@@ -202,6 +205,9 @@
          </item>
          <item>
           <widget class="QLabel" name="totalIncomeValue">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>-</string>
            </property>
@@ -216,6 +222,9 @@
         <layout class="QHBoxLayout" name="totalExpenseHorizontal">
          <item>
           <widget class="QLabel" name="totalExpense">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>Total Outcome</string>
            </property>
@@ -226,6 +235,9 @@
          </item>
          <item>
           <widget class="QLabel" name="totalExpenseValue">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>-</string>
            </property>
