@@ -73,9 +73,9 @@
      <widget class="QWidget" name="horizontalLayoutWidget_2">
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>410</y>
-        <width>711</width>
+        <x>10</x>
+        <y>430</y>
+        <width>751</width>
         <height>80</height>
        </rect>
       </property>
@@ -90,6 +90,9 @@
            <horstretch>200</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="verticalScrollBarPolicy">
+          <enum>Qt::ScrollBarAlwaysOn</enum>
          </property>
          <property name="editTriggers">
           <set>QAbstractItemView::NoEditTriggers</set>
@@ -168,9 +171,9 @@
      <widget class="QWidget" name="verticalLayoutWidget">
       <property name="geometry">
        <rect>
-        <x>50</x>
-        <y>180</y>
-        <width>351</width>
+        <x>40</x>
+        <y>260</y>
+        <width>251</width>
         <height>151</height>
        </rect>
       </property>
@@ -275,8 +278,8 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>300</x>
-        <y>150</y>
+        <x>60</x>
+        <y>200</y>
         <width>100</width>
         <height>22</height>
        </rect>
@@ -324,31 +327,18 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="horizontalLayoutWidget_3">
+     <widget class="QtCharts::QChartView" name="chartViewOverall">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
       <property name="geometry">
        <rect>
-        <x>450</x>
-        <y>180</y>
-        <width>301</width>
-        <height>151</height>
+        <x>300</x>
+        <y>130</y>
+        <width>461</width>
+        <height>291</height>
        </rect>
       </property>
-      <layout class="QHBoxLayout" name="chartHorizontalLayout">
-       <item>
-        <widget class="QtCharts::QChartView" name="chartViewExpense">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QtCharts::QChartView" name="chartViewIncome">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-      </layout>
      </widget>
     </widget>
     <widget class="QWidget" name="incomeTab">
@@ -369,7 +359,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "chartbuilder.h"
 #include <QPieSeries>
 #include <QFileDialog>
 
@@ -8,20 +9,10 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ChartBuilder cBuilder;
 
-    QPieSeries *series = new QPieSeries();
-    series->append("Jane", 1);
-    series->append("Joe", 2);
-    series->append("Andy", 3);
-    series->append("Barbara", 4);
-    series->append("Axel", 5);
-
-    QChart *chart = new QChart();
-    chart->addSeries(series);
-    chart->legend()->hide();
-
-    ui->chartViewExpense->setChart(chart);
-    ui->chartViewExpense->setRenderHint(QPainter::Antialiasing);
+    ui->chartViewOverall->setChart(cBuilder.buildChart("none", false));
+    ui->chartViewOverall->setRenderHint(QPainter::Antialiasing);
 }
 
 MainWindow::~MainWindow()
