@@ -17,11 +17,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     chartbuilder.cpp \
+    dbmanager.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     chartbuilder.h \
+    dbmanager.h \
     mainwindow.h
 
 FORMS += \

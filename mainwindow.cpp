@@ -22,16 +22,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::createDatabase(QString filename)
 {
-    QSqlDatabase newDb = QSqlDatabase::addDatabase("QSQLITE");
-    newDb.setDatabaseName(filename);
-    if (newDb.open())
-    {
-      database = newDb;
-    }
-    else
-    {
-       //TODO - ERROR
-    }
+    database.createNewDatabase(filename);
 }
 
 void MainWindow::loadData()
@@ -49,13 +40,15 @@ void MainWindow::switchEnabledElements(bool state)
     ui->monthlyRadioButton->setEnabled(state);
     ui->monthComboBox->setEnabled(state);
     ui->yearlyRadioButton->setEnabled(state);
+    ui->actionSave->setEnabled(state);
+    ui->actionSave_As->setEnabled(state);
 }
 
 
 void MainWindow::on_newPushButton_clicked()
 {
     QString dbFilename = QFileDialog::getSaveFileName(this, tr("Create Budget Database"), tr("newBudget.sqlite"), tr("*.sqlite"));
-    createDatabase(dbFilename);
+    database.createNewDatabase(dbFilename);
     if (database.isOpen())
     {
         ui->savePushButton->setEnabled(true);
@@ -67,11 +60,19 @@ void MainWindow::on_newPushButton_clicked()
 void MainWindow::on_loadPushButton_clicked()
 {
     QString dbFilename = QFileDialog::getOpenFileName(this, tr("Open Budget Database"), tr(".../"), tr("*.sqlite"));
-    createDatabase(dbFilename);
+    database.openExistingDatabase(dbFilename);
     if (database.isOpen())
     {
         ui->savePushButton->setEnabled(true);
         ui->budgetNameLabel->setText(dbFilename);
         switchEnabledElements(true);
+        QSqlTableModel *model = database.getTableModel("expenses");
+        QString newItem = model->record(0).value("name").toString();
+        ui->personListSelectorWidget->addItem(newItem);
     }
+}
+
+void MainWindow::on_actionOpen_triggered()
+{
+    on_loadPushButton_clicked();
 }

@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "ui_mainwindow.h"
+#include "dbmanager.h"
 #include <QMainWindow>
 #include <QtSql>
 #include <QPieSeries>
@@ -26,8 +27,10 @@ private slots:
     void on_newPushButton_clicked();
     void on_loadPushButton_clicked();
 
+    void on_actionOpen_triggered();
+
 private:
     Ui::MainWindow *ui;
-    QSqlDatabase database;
+    dbManager database;
 };
 #endif // MAINWINDOW_H
