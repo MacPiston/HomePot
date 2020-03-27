@@ -29,6 +29,8 @@ private slots:
 
     void on_actionOpen_triggered();
 
+    void on_personListSelectorWidget_currentRowChanged(int currentRow);
+
 private:
     Ui::MainWindow *ui;
     dbManager database;

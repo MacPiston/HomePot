@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->chartViewOverall->setChart(cBuilder.buildChart("none", false));
     ui->chartViewOverall->setRenderHint(QPainter::Antialiasing);
+
 }
 
 MainWindow::~MainWindow()
@@ -23,10 +24,40 @@ MainWindow::~MainWindow()
 void MainWindow::createDatabase(QString filename)
 {
     database.createNewDatabase(filename);
+
 }
 
 void MainWindow::loadData()
 {
+    //setup
+
+    //person selector
+    QString *personArray = database.getDataArray(database.personsTableModel, "person");
+    for (int i = 0;i < database.personsTableModel->rowCount(); i++)
+    {
+        ui->personListSelectorWidget->addItem(personArray[i]);
+    }
+    ui->personListSelectorWidget->sortItems(Qt::SortOrder::AscendingOrder);
+    ui->personListSelectorWidget->setSortingEnabled(true);
+    ui->personListSelectorWidget->setCurrentRow(0);
+
+    //total expense
+    float *floatArray = database.getFloatArray(database.expensesTableModel, "value");
+    float sum = 0;
+    for (int i = 0; i < database.expensesTableModel->rowCount(); i++)
+    {
+        sum += floatArray[i];
+    }
+    ui->totalExpenseValue->setText(QString::number(sum));
+
+    //total income
+    sum = 0;
+    floatArray = database.getFloatArray(database.incomesTableModel, "value");
+    for (int i = 0; i < database.incomesTableModel->rowCount(); i++)
+    {
+        sum += floatArray[i];
+    }
+    ui->totalIncomeValue->setText(QString::number(sum));
 
 }
 
@@ -62,17 +93,20 @@ void MainWindow::on_loadPushButton_clicked()
     QString dbFilename = QFileDialog::getOpenFileName(this, tr("Open Budget Database"), tr(".../"), tr("*.sqlite"));
     database.openExistingDatabase(dbFilename);
     if (database.isOpen())
-    {
+    {   
+        loadData();
         ui->savePushButton->setEnabled(true);
         ui->budgetNameLabel->setText(dbFilename);
         switchEnabledElements(true);
-        QSqlTableModel *model = database.getTableModel("expenses");
-        QString newItem = model->record(0).value("name").toString();
-        ui->personListSelectorWidget->addItem(newItem);
     }
 }
 
 void MainWindow::on_actionOpen_triggered()
 {
     on_loadPushButton_clicked();
+}
+
+void MainWindow::on_personListSelectorWidget_currentRowChanged(int currentRow)
+{
+    ui->personListSelectorWidget->setCurrentRow(currentRow);
 }
