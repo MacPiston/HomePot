@@ -7,12 +7,14 @@ class dbManager
 {
 private:
     QSqlDatabase sqlDatabase;
-     QSqlTableModel *getTableModel(const QString &tableName);
+    QSqlTableModel *getTableModel(const QString &tableName);
 public:
+    dbManager();
+
     QSqlTableModel *expensesTableModel;
     QSqlTableModel *incomesTableModel;
     QSqlTableModel *personsTableModel;
-    dbManager();
+
     void createNewDatabase(QString filename);
     void openExistingDatabase(QString filename);
     bool isOpen();

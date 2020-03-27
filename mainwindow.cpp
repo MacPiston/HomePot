@@ -21,18 +21,13 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::createDatabase(QString filename)
-{
-    database.createNewDatabase(filename);
-
-}
-
 void MainWindow::loadData()
 {
     //setup
-
-    //person selector
     QString *personArray = database.getDataArray(database.personsTableModel, "person");
+    float *floatArray = database.getFloatArray(database.expensesTableModel, "value");
+    //person selector
+
     for (int i = 0;i < database.personsTableModel->rowCount(); i++)
     {
         ui->personListSelectorWidget->addItem(personArray[i]);
@@ -42,7 +37,6 @@ void MainWindow::loadData()
     ui->personListSelectorWidget->setCurrentRow(0);
 
     //total expense
-    float *floatArray = database.getFloatArray(database.expensesTableModel, "value");
     float sum = 0;
     for (int i = 0; i < database.expensesTableModel->rowCount(); i++)
     {
@@ -73,6 +67,11 @@ void MainWindow::switchEnabledElements(bool state)
     ui->yearlyRadioButton->setEnabled(state);
     ui->actionSave->setEnabled(state);
     ui->actionSave_As->setEnabled(state);
+}
+
+void MainWindow::reloadPersonData()
+{
+
 }
 
 
@@ -109,4 +108,5 @@ void MainWindow::on_actionOpen_triggered()
 void MainWindow::on_personListSelectorWidget_currentRowChanged(int currentRow)
 {
     ui->personListSelectorWidget->setCurrentRow(currentRow);
+    reloadPersonData(); //TODO
 }

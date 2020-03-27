@@ -19,9 +19,9 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void createDatabase(QString filename);
     void loadData();
     void switchEnabledElements(bool state);
+    void reloadPersonData();
 
 private slots:
     void on_newPushButton_clicked();

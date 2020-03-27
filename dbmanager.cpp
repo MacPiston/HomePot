@@ -15,7 +15,6 @@ void dbManager::createNewDatabase(QString filename)
     {
         //TODO-ERROR
     } else {
-
         QSqlQuery query;
         query.exec("CREATE TABLE \"expenses\""
                 "(\"name\"	TEXT NOT NULL,"
@@ -33,6 +32,9 @@ void dbManager::createNewDatabase(QString filename)
                 "PRIMARY KEY(\"name\"))");
         query.exec("CREATE TABLE \"persons\" "
                 "(\"person\"	TEXT)");
+        personsTableModel = getTableModel("persons");
+        expensesTableModel = getTableModel("expenses");
+        incomesTableModel = getTableModel("incomes");
     }
 }
 
@@ -40,13 +42,13 @@ void dbManager::openExistingDatabase(QString filename)
 {
     sqlDatabase = QSqlDatabase::addDatabase("QSQLITE");
     sqlDatabase.setDatabaseName(filename);
-    if (sqlDatabase.open())
+    if (!sqlDatabase.open())
     {
+        //TODO - ERROR
+    } else {
         personsTableModel = getTableModel("persons");
         expensesTableModel = getTableModel("expenses");
         incomesTableModel = getTableModel("incomes");
-    } else {
-
     }
 }
 
