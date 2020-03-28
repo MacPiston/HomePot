@@ -21,7 +21,8 @@ public:
 
     void loadData();
     void switchEnabledElements(bool state);
-    void reloadPersonData();
+    void loadPersonData();
+    void loadIncomesTabData();
 
 private slots:
     void on_newPushButton_clicked();

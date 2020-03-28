@@ -4,6 +4,7 @@
 #include <QPieSeries>
 #include <QFileDialog>
 
+//CONSTRUCTOR & DESTRUCTOR
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -14,6 +15,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->chartViewOverall->setChart(cBuilder.buildChart("none", false));
     ui->chartViewOverall->setRenderHint(QPainter::Antialiasing);
 
+    ui->tabWidget->setTabEnabled(1, false);
+    ui->tabWidget->setTabEnabled(2, false);
+
 }
 
 MainWindow::~MainWindow()
@@ -21,6 +25,8 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+
+// DATA LOADING
 void MainWindow::loadData()
 {
     //setup
@@ -53,35 +59,39 @@ void MainWindow::loadData()
     }
     ui->totalIncomeValue->setText(QString::number(sum));
 
+    //incomes tab
+    loadIncomesTabData();
+
+    //expenses tab
+
 }
 
-void MainWindow::switchEnabledElements(bool state)
+void MainWindow::loadPersonData()
 {
-    ui->personListSelectorWidget->setEnabled(state);
-    ui->totalIncome->setEnabled(state);
-    ui->totalIncomeValue->setEnabled(state);
-    ui->totalExpense->setEnabled(state);
-    ui->totalExpenseValue->setEnabled(state);
-    ui->monthlyRadioButton->setEnabled(state);
-    ui->monthComboBox->setEnabled(state);
-    ui->yearlyRadioButton->setEnabled(state);
-    ui->actionSave->setEnabled(state);
-    ui->actionSave_As->setEnabled(state);
+    //TODO
 }
 
-void MainWindow::reloadPersonData()
+void MainWindow::loadIncomesTabData()
 {
+    ui->incomesTableView->setModel(database.incomesTableModel);
+    ui->incomesTableView->resizeRowsToContents();
 
+    float totalValue = 0;
+    float *floatArray = database.getFloatArray(database.incomesTableModel, "value");
+    for (int i = 0; i < database.incomesTableModel->rowCount(); i++)
+    {
+        totalValue += floatArray[i];
+    }
+    ui->incomesYearlyValueLabel->setText(QString::number(totalValue));
 }
 
-
+//RESPONDING TO EVENTS
 void MainWindow::on_newPushButton_clicked()
 {
     QString dbFilename = QFileDialog::getSaveFileName(this, tr("Create Budget Database"), tr("newBudget.sqlite"), tr("*.sqlite"));
     database.createNewDatabase(dbFilename);
     if (database.isOpen())
     {
-        ui->savePushButton->setEnabled(true);
         ui->budgetNameLabel->setText(dbFilename);
         switchEnabledElements(true);
     }
@@ -94,7 +104,6 @@ void MainWindow::on_loadPushButton_clicked()
     if (database.isOpen())
     {   
         loadData();
-        ui->savePushButton->setEnabled(true);
         ui->budgetNameLabel->setText(dbFilename);
         switchEnabledElements(true);
     }
@@ -108,5 +117,23 @@ void MainWindow::on_actionOpen_triggered()
 void MainWindow::on_personListSelectorWidget_currentRowChanged(int currentRow)
 {
     ui->personListSelectorWidget->setCurrentRow(currentRow);
-    reloadPersonData(); //TODO
+    loadPersonData(); //TODO
+}
+
+//OTHERS
+void MainWindow::switchEnabledElements(bool state)
+{
+    ui->personListSelectorWidget->setEnabled(state);
+    ui->totalIncome->setEnabled(state);
+    ui->totalIncomeValue->setEnabled(state);
+    ui->totalExpense->setEnabled(state);
+    ui->totalExpenseValue->setEnabled(state);
+    ui->monthlyRadioButton->setEnabled(state);
+    ui->monthComboBox->setEnabled(state);
+    ui->yearlyRadioButton->setEnabled(state);
+    ui->actionSave->setEnabled(state);
+    ui->tabWidget->setTabEnabled(1, state);
+    ui->tabWidget->setTabEnabled(2, state);
+    ui->incomeTab->setEnabled(state);
+    ui->expensesTab->setEnabled(state);
 }
