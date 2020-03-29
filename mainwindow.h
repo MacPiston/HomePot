@@ -32,8 +32,13 @@ private slots:
 
     void on_personListSelectorWidget_currentRowChanged(int currentRow);
 
+    void on_incomesSubmitButton_clicked();
+
+    void on_incomesDeleteIncomeButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     dbManager database;
+    QStringList months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 };
 #endif // MAINWINDOW_H

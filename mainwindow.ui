@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>811</width>
+    <height>637</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -249,11 +249,14 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>170</x>
+        <x>160</x>
         <y>150</y>
-        <width>79</width>
+        <width>121</width>
         <height>24</height>
        </rect>
+      </property>
+      <property name="sizeAdjustPolicy">
+       <enum>QComboBox::AdjustToMinimumContentsLength</enum>
       </property>
      </widget>
      <widget class="QRadioButton" name="monthlyRadioButton">
@@ -336,7 +339,7 @@
     </widget>
     <widget class="QWidget" name="incomeTab">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <attribute name="title">
       <string>Incomes</string>
@@ -347,7 +350,7 @@
         <x>10</x>
         <y>10</y>
         <width>411</width>
-        <height>501</height>
+        <height>491</height>
        </rect>
       </property>
      </widget>
@@ -366,14 +369,14 @@
          <item>
           <widget class="QComboBox" name="incomesMonthComboBox">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QLabel" name="incomesMonthlyLabel">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="text">
             <string>Total Incomes:</string>
@@ -386,7 +389,7 @@
          <item>
           <widget class="QLabel" name="incomesMonthlyValueLabel">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="text">
             <string>-</string>
@@ -403,7 +406,7 @@
          <item>
           <widget class="QLabel" name="incomesYearlyLabel">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="text">
             <string>Total Yearly Incomes:</string>
@@ -416,7 +419,7 @@
          <item>
           <widget class="QLabel" name="incomesYearlyValueLabel">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="text">
             <string>-</string>
@@ -457,7 +460,7 @@
        <item>
         <widget class="QPushButton" name="incomesSubmitButton">
          <property name="enabled">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
          <property name="text">
           <string>Submit Changes</string>
@@ -482,7 +485,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>811</width>
      <height>22</height>
     </rect>
    </property>

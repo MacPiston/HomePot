@@ -9,6 +9,7 @@ dbManager::dbManager()
 
 void dbManager::createNewDatabase(QString filename)
 {
+    if (sqlDatabase.isOpen()) sqlDatabase.close();
     sqlDatabase = QSqlDatabase::addDatabase("QSQLITE");
     sqlDatabase.setDatabaseName(filename);
     if (!sqlDatabase.open())
@@ -40,6 +41,7 @@ void dbManager::createNewDatabase(QString filename)
 
 void dbManager::openExistingDatabase(QString filename)
 {
+    if (sqlDatabase.isOpen()) sqlDatabase.close();
     sqlDatabase = QSqlDatabase::addDatabase("QSQLITE");
     sqlDatabase.setDatabaseName(filename);
     if (!sqlDatabase.open())

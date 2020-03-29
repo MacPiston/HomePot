@@ -9,15 +9,21 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    //UI
     ui->setupUi(this);
-    ChartBuilder cBuilder;
 
+    //CHART
+    ChartBuilder cBuilder;
     ui->chartViewOverall->setChart(cBuilder.buildChart("none", false));
     ui->chartViewOverall->setRenderHint(QPainter::Antialiasing);
 
+    //TABS
     ui->tabWidget->setTabEnabled(1, false);
     ui->tabWidget->setTabEnabled(2, false);
 
+    //MONTH COMBOBOX
+    ui->monthComboBox->addItems(months);
+    ui->incomesMonthComboBox->addItems(months);
 }
 
 MainWindow::~MainWindow()
@@ -86,7 +92,7 @@ void MainWindow::loadIncomesTabData()
 }
 
 //RESPONDING TO EVENTS
-void MainWindow::on_newPushButton_clicked()
+void MainWindow::on_newPushButton_clicked() // new database creation
 {
     QString dbFilename = QFileDialog::getSaveFileName(this, tr("Create Budget Database"), tr("newBudget.sqlite"), tr("*.sqlite"));
     database.createNewDatabase(dbFilename);
@@ -97,7 +103,7 @@ void MainWindow::on_newPushButton_clicked()
     }
 }
 
-void MainWindow::on_loadPushButton_clicked()
+void MainWindow::on_loadPushButton_clicked() // loading existing database
 {
     QString dbFilename = QFileDialog::getOpenFileName(this, tr("Open Budget Database"), tr(".../"), tr("*.sqlite"));
     database.openExistingDatabase(dbFilename);
@@ -109,17 +115,46 @@ void MainWindow::on_loadPushButton_clicked()
     }
 }
 
-void MainWindow::on_actionOpen_triggered()
+void MainWindow::on_actionOpen_triggered() // loading existing database by top menu
 {
     on_loadPushButton_clicked();
 }
 
-void MainWindow::on_personListSelectorWidget_currentRowChanged(int currentRow)
+void MainWindow::on_personListSelectorWidget_currentRowChanged(int currentRow) // response to change in person selector
 {
     ui->personListSelectorWidget->setCurrentRow(currentRow);
     loadPersonData(); //TODO
 }
 
+void MainWindow::on_incomesSubmitButton_clicked() // submitting changes to the database on INCOMES view
+{
+    database.incomesTableModel->database().transaction();
+    if (database.incomesTableModel->submitAll())
+    {
+        database.incomesTableModel->database().commit();
+    } else
+    {
+        database.incomesTableModel->database().rollback();
+    }
+}
+
+void MainWindow::on_incomesDeleteIncomeButton_clicked() // deleing selected rows on INCOMES view
+{
+    QItemSelectionModel *selectedRows = ui->incomesTableView->selectionModel();
+    if (selectedRows->hasSelection())
+    {
+        QModelIndexList rows = selectedRows->selectedRows();
+        database.incomesTableModel->removeRows(rows.first().row(), rows.count());
+        database.incomesTableModel->database().transaction();
+        if (database.incomesTableModel->submitAll())
+        {
+            database.incomesTableModel->database().commit();
+        } else
+        {
+            database.incomesTableModel->database().rollback();
+        }
+    }
+}
 //OTHERS
 void MainWindow::switchEnabledElements(bool state)
 {
@@ -137,3 +172,4 @@ void MainWindow::switchEnabledElements(bool state)
     ui->incomeTab->setEnabled(state);
     ui->expensesTab->setEnabled(state);
 }
+
