@@ -50,18 +50,24 @@ void MainWindow::loadData()
 
     //total expense
     float sum = 0;
-    for (int i = 0; i < database.expensesTableModel->rowCount(); i++)
+    if (database.expensesTableModel->rowCount() != 0)
     {
-        sum += floatArray[i];
+        for (int i = 0; i < database.expensesTableModel->rowCount(); i++)
+        {
+         sum += floatArray[i];
+        }
     }
     ui->totalExpenseValue->setText(QString::number(sum));
 
     //total income
     sum = 0;
-    floatArray = database.getFloatArray(database.incomesTableModel, "value");
-    for (int i = 0; i < database.incomesTableModel->rowCount(); i++)
+    if (database.incomesTableModel->rowCount() != 0)
     {
-        sum += floatArray[i];
+        floatArray = database.getFloatArray(database.incomesTableModel, "value");
+        for (int i = 0; i < database.incomesTableModel->rowCount(); i++)
+        {
+            sum += floatArray[i];
+        }
     }
     ui->totalIncomeValue->setText(QString::number(sum));
 
@@ -138,12 +144,12 @@ void MainWindow::on_incomesSubmitButton_clicked() // submitting changes to the d
     }
 }
 
-void MainWindow::on_incomesDeleteIncomeButton_clicked() // deleing selected rows on INCOMES view
+void MainWindow::on_incomesDeleteIncomeButton_clicked() // deleting selected rows on INCOMES view
 {
     QItemSelectionModel *selectedRows = ui->incomesTableView->selectionModel();
     if (selectedRows->hasSelection())
     {
-        QModelIndexList rows = selectedRows->selectedRows();
+        QModelIndexList rows = selectedRows->selectedIndexes();
         database.incomesTableModel->removeRows(rows.first().row(), rows.count());
         database.incomesTableModel->database().transaction();
         if (database.incomesTableModel->submitAll())
@@ -155,6 +161,11 @@ void MainWindow::on_incomesDeleteIncomeButton_clicked() // deleing selected rows
         }
     }
 }
+
+void MainWindow::on_incomesNewIncomeButton_clicked() // adding new income
+{
+}
+
 //OTHERS
 void MainWindow::switchEnabledElements(bool state)
 {
@@ -166,10 +177,8 @@ void MainWindow::switchEnabledElements(bool state)
     ui->monthlyRadioButton->setEnabled(state);
     ui->monthComboBox->setEnabled(state);
     ui->yearlyRadioButton->setEnabled(state);
-    ui->actionSave->setEnabled(state);
     ui->tabWidget->setTabEnabled(1, state);
     ui->tabWidget->setTabEnabled(2, state);
     ui->incomeTab->setEnabled(state);
     ui->expensesTab->setEnabled(state);
 }
-

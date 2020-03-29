@@ -36,6 +36,8 @@ private slots:
 
     void on_incomesDeleteIncomeButton_clicked();
 
+    void on_incomesNewIncomeButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     dbManager database;
