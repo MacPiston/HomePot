@@ -27,7 +27,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="summaryTab">
      <attribute name="title">
@@ -177,10 +177,40 @@
         <x>40</x>
         <y>260</y>
         <width>251</width>
-        <height>151</height>
+        <height>161</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <layout class="QHBoxLayout" name="statusHorizontal">
+         <item>
+          <widget class="QLabel" name="status">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>Status</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="statusValue">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>-</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
        <item>
         <layout class="QHBoxLayout" name="totalIncomeHorizontal">
          <item>
@@ -349,7 +379,7 @@
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>411</width>
+        <width>501</width>
         <height>491</height>
        </rect>
       </property>
@@ -357,9 +387,9 @@
      <widget class="QWidget" name="verticalLayoutWidget_3">
       <property name="geometry">
        <rect>
-        <x>440</x>
+        <x>520</x>
         <y>250</y>
-        <width>321</width>
+        <width>241</width>
         <height>251</height>
        </rect>
       </property>
@@ -436,9 +466,9 @@
      <widget class="QWidget" name="verticalLayoutWidget_4">
       <property name="geometry">
        <rect>
-        <x>480</x>
+        <x>560</x>
         <y>70</y>
-        <width>241</width>
+        <width>161</width>
         <height>121</height>
        </rect>
       </property>
@@ -453,7 +483,7 @@
        <item>
         <widget class="QPushButton" name="incomesDeleteIncomeButton">
          <property name="text">
-          <string>Delete Selected Income</string>
+          <string>Delete Sel. Incomes</string>
          </property>
         </widget>
        </item>
@@ -486,7 +516,7 @@
      <x>0</x>
      <y>0</y>
      <width>811</width>
-     <height>20</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

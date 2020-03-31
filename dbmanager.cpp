@@ -31,9 +31,6 @@ void dbManager::createNewDatabase(QString filename)
                 "\"date\"	TEXT NOT NULL,"
                 "\"person\"	TEXT NOT NULL,"
                 "PRIMARY KEY(\"name\"))");
-        query.exec("CREATE TABLE \"persons\" "
-                "(\"person\"	TEXT)");
-        personsTableModel = getTableModel("persons");
         expensesTableModel = getTableModel("expenses");
         incomesTableModel = getTableModel("incomes");
     }
@@ -48,7 +45,6 @@ void dbManager::openExistingDatabase(QString filename)
     {
         //TODO - ERROR
     } else {
-        personsTableModel = getTableModel("persons");
         expensesTableModel = getTableModel("expenses");
         incomesTableModel = getTableModel("incomes");
     }
@@ -68,24 +64,15 @@ QSqlTableModel *dbManager::getTableModel(const QString &tableName)
     return model;
 }
 
-QString *dbManager::getDataArray(QSqlTableModel *model, QString value)
+QStringList dbManager::getDataArray(QSqlTableModel *model, QString value)
 {
     int rows = model->rowCount();
-    QString *toReturn = new QString[rows];
+    QStringList toReturn;
     for (int i = 0; i < rows; i++)
     {
-        toReturn[i] = model->record(i).value(value).toString();
+        toReturn.append(model->record(i).value(value).toString());
     }
     return toReturn;
 }
 
-float *dbManager::getFloatArray(QSqlTableModel *model, QString value)
-{
-    int rows = model->rowCount();
-    float *toReturn = new float[rows];
-    for (int i = 0; i < rows; i++) {
-        toReturn[i] = model->record(i).value(value).toFloat();
-    }
-    return toReturn;
-}
 

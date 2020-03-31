@@ -3,6 +3,7 @@
 
 #include "ui_mainwindow.h"
 #include "dbmanager.h"
+#include "valuemanager.h"
 #include <QMainWindow>
 #include <QtSql>
 #include <QPieSeries>
@@ -38,9 +39,10 @@ private slots:
 
     void on_incomesNewIncomeButton_clicked();
 
-private:
+protected:
     Ui::MainWindow *ui;
     dbManager database;
+    valueManager vManager;
     QStringList months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 };
 #endif // MAINWINDOW_H

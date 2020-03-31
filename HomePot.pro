@@ -19,12 +19,14 @@ SOURCES += \
     chartbuilder.cpp \
     dbmanager.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    valuemanager.cpp
 
 HEADERS += \
     chartbuilder.h \
     dbmanager.h \
-    mainwindow.h
+    mainwindow.h \
+    valuemanager.h
 
 FORMS += \
     mainwindow.ui

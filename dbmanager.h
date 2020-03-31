@@ -19,8 +19,7 @@ public:
     void openExistingDatabase(QString filename);
     bool isOpen();
 
-    QString *getDataArray(QSqlTableModel *model, QString value);
-    float *getFloatArray(QSqlTableModel *model, QString value);
+    QStringList getDataArray(QSqlTableModel *model, QString value);
 };
 
 #endif // DBMANAGER_H

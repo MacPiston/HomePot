@@ -36,41 +36,37 @@ MainWindow::~MainWindow()
 void MainWindow::loadData()
 {
     //setup
-    QString *personArray = database.getDataArray(database.personsTableModel, "person");
-    float *floatArray = database.getFloatArray(database.expensesTableModel, "value");
-    //person selector
 
-    for (int i = 0;i < database.personsTableModel->rowCount(); i++)
-    {
-        ui->personListSelectorWidget->addItem(personArray[i]);
-    }
+    //person selector
+    QStringList persons = vManager.generatePersonsArray(database);
+    ui->personListSelectorWidget->addItems(persons);
     ui->personListSelectorWidget->sortItems(Qt::SortOrder::AscendingOrder);
     ui->personListSelectorWidget->setSortingEnabled(true);
     ui->personListSelectorWidget->setCurrentRow(0);
 
+
     //total expense
-    float sum = 0;
-    if (database.expensesTableModel->rowCount() != 0)
-    {
-        for (int i = 0; i < database.expensesTableModel->rowCount(); i++)
-        {
-         sum += floatArray[i];
-        }
-    }
-    ui->totalExpenseValue->setText(QString::number(sum));
+    float totalExpense = vManager.generateTotalExpense(database);
+    ui->totalExpenseValue->setText(QString::number(totalExpense));
 
     //total income
-    sum = 0;
-    if (database.incomesTableModel->rowCount() != 0)
-    {
-        floatArray = database.getFloatArray(database.incomesTableModel, "value");
-        for (int i = 0; i < database.incomesTableModel->rowCount(); i++)
-        {
-            sum += floatArray[i];
-        }
-    }
-    ui->totalIncomeValue->setText(QString::number(sum));
+    float totalIncome = vManager.generateTotalIncome(database);
+    ui->totalIncomeValue->setText(QString::number(totalIncome));
 
+    //status
+    float diff = totalIncome - totalExpense;
+    if ((diff > -1000) and (diff < 0))
+    {
+        ui->statusValue->setText("Warning: " + QString::number(totalIncome - totalExpense));
+        ui->statusValue->setStyleSheet("QLabel { background-color : orange; color : black;}");
+    } else if (diff < -1000)
+    {
+        ui->statusValue->setText("ALERT: " + QString::number(totalIncome - totalExpense));
+        ui->statusValue->setStyleSheet("QLabel { background-color : red; color : black;}");
+    } else {
+        ui->statusValue->setText("Fine: " + QString::number(totalIncome - totalExpense));
+        ui->statusValue->setStyleSheet("QLabel { background-color : green; color : black;}");
+    }
     //incomes tab
     loadIncomesTabData();
 
@@ -85,16 +81,12 @@ void MainWindow::loadPersonData()
 
 void MainWindow::loadIncomesTabData()
 {
+    database.incomesTableModel->sort(0, Qt::SortOrder::AscendingOrder);
     ui->incomesTableView->setModel(database.incomesTableModel);
     ui->incomesTableView->resizeRowsToContents();
 
-    float totalValue = 0;
-    float *floatArray = database.getFloatArray(database.incomesTableModel, "value");
-    for (int i = 0; i < database.incomesTableModel->rowCount(); i++)
-    {
-        totalValue += floatArray[i];
-    }
-    ui->incomesYearlyValueLabel->setText(QString::number(totalValue));
+    ui->incomesYearlyValueLabel->setText(QString::number(vManager.generateTotalIncome(database)));
+    ui->incomesTableView->update();
 }
 
 //RESPONDING TO EVENTS
@@ -104,6 +96,7 @@ void MainWindow::on_newPushButton_clicked() // new database creation
     database.createNewDatabase(dbFilename);
     if (database.isOpen())
     {
+        loadData();
         ui->budgetNameLabel->setText(dbFilename);
         switchEnabledElements(true);
     }
@@ -142,6 +135,8 @@ void MainWindow::on_incomesSubmitButton_clicked() // submitting changes to the d
     {
         database.incomesTableModel->database().rollback();
     }
+
+    loadIncomesTabData();
 }
 
 void MainWindow::on_incomesDeleteIncomeButton_clicked() // deleting selected rows on INCOMES view
@@ -151,19 +146,14 @@ void MainWindow::on_incomesDeleteIncomeButton_clicked() // deleting selected row
     {
         QModelIndexList rows = selectedRows->selectedIndexes();
         database.incomesTableModel->removeRows(rows.first().row(), rows.count());
-        database.incomesTableModel->database().transaction();
-        if (database.incomesTableModel->submitAll())
-        {
-            database.incomesTableModel->database().commit();
-        } else
-        {
-            database.incomesTableModel->database().rollback();
-        }
     }
+
 }
 
 void MainWindow::on_incomesNewIncomeButton_clicked() // adding new income
 {
+    database.incomesTableModel->insertRows(0, 1);
+
 }
 
 //OTHERS
@@ -181,4 +171,6 @@ void MainWindow::switchEnabledElements(bool state)
     ui->tabWidget->setTabEnabled(2, state);
     ui->incomeTab->setEnabled(state);
     ui->expensesTab->setEnabled(state);
+    ui->statusValue->setEnabled(state);
+    ui->status->setEnabled(state);
 }
