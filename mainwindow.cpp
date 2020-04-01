@@ -31,21 +31,25 @@ MainWindow::~MainWindow()
 // DATA LOADING
 void MainWindow::loadData()
 {
-    //setup
-
     //chart
     ui->chartViewOverall->setChart(cBuilder.buildChart("none", false, vManager, database));
     ui->chartViewOverall->setRenderHint(QPainter::Antialiasing);
+
+    //summary
+    loadSummaryData();
+
+    //person selector
+    //loadPersonData(); //included in summaryData
 
     //incomes tab
     loadIncomesTabData();
 
     //expenses tab
     loadExpensesTabData();
+}
 
-    //person selector
-    loadPersonData();
-
+void MainWindow::loadSummaryData()
+{
     //total expense
     float totalExpense = vManager.generateTotalExpense(database);
     ui->totalExpenseValue->setText(QString::number(totalExpense));
@@ -68,22 +72,21 @@ void MainWindow::loadData()
         ui->statusValue->setText("Fine: " + QString::number(totalIncome - totalExpense));
         ui->statusValue->setStyleSheet("QLabel { background-color : green; color : black;}");
     }
-
-
+    loadPersonData(); //CAUSES CRASH WHEN SUBMITTING EXPENSES
 }
 
 void MainWindow::loadPersonData()
 {
-        ui->personListSelectorWidget->clear();
-        ui->personListSelectorWidget->addItems(vManager.generatePersonsArray(database));
-        ui->personListSelectorWidget->sortItems(Qt::SortOrder::AscendingOrder);
-        ui->personListSelectorWidget->setSortingEnabled(true);
-        ui->personListSelectorWidget->setCurrentRow(0);
-        ui->personListSelectorWidget->update();
+    //ui->personListSelectorWidget->clear();
+    ui->personListSelectorWidget->addItems(vManager.generatePersonsArray(database));
+    ui->personListSelectorWidget->sortItems(Qt::SortOrder::AscendingOrder);
+    ui->personListSelectorWidget->setSortingEnabled(true);
+    ui->personListSelectorWidget->setCurrentRow(0);
 }
 
 void MainWindow::loadIncomesTabData()
 {
+    database.incomesTableModel->setTable("incomes");
     database.incomesTableModel->sort(0, Qt::SortOrder::AscendingOrder);
     ui->incomesTableView->setModel(database.incomesTableModel);
     ui->incomesTableView->resizeRowsToContents();
@@ -94,6 +97,7 @@ void MainWindow::loadIncomesTabData()
 
 void MainWindow::loadExpensesTabData()
 {
+    database.expensesTableModel->setTable("expenses");
     database.expensesTableModel->sort(0, Qt::SortOrder::AscendingOrder);
     ui->expensesTableView->setModel(database.expensesTableModel);
     ui->expensesTableView->resizeRowsToContents();
@@ -169,7 +173,7 @@ void MainWindow::on_incomesSubmitButton_clicked() // submitting changes to the d
     {
         database.incomesTableModel->database().rollback();
     }
-
+    loadIncomesTabData();
     loadData();
 }
 
@@ -189,7 +193,7 @@ void MainWindow::on_incomesNewIncomeButton_clicked() // adding new income
 
 }
 
-void MainWindow::on_expensesNewIncomeButton_clicked()
+void MainWindow::on_expensesNewIncomeButton_clicked() //adding new expense
 {
     database.expensesTableModel->insertRows(0, 1);
 }
@@ -207,13 +211,14 @@ void MainWindow::on_expensesDeleteIncomeButton_clicked()
 void MainWindow::on_expensesSubmitButton_clicked()
 {
     database.expensesTableModel->database().transaction();
-    if (database.incomesTableModel->submitAll())
+    if (database.expensesTableModel->submitAll())
     {
         database.expensesTableModel->database().commit();
     } else
     {
         database.expensesTableModel->database().rollback();
     }
+    loadExpensesTabData();
     loadData();
 }
 

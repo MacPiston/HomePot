@@ -26,6 +26,7 @@ public:
     void loadPersonData();
     void loadIncomesTabData();
     void loadExpensesTabData();
+    void loadSummaryData();
 
 private slots:
     void on_newPushButton_clicked();

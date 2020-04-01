@@ -189,7 +189,7 @@
             <bool>false</bool>
            </property>
            <property name="text">
-            <string>Status</string>
+            <string>Difference:</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -219,7 +219,7 @@
             <bool>false</bool>
            </property>
            <property name="text">
-            <string>Total Income</string>
+            <string>Total Income:</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -249,7 +249,7 @@
             <bool>false</bool>
            </property>
            <property name="text">
-            <string>Total Expense</string>
+            <string>Total Expense:</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -542,7 +542,7 @@
             <bool>true</bool>
            </property>
            <property name="text">
-            <string>Total Incomes:</string>
+            <string>Total Expenses:</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -572,7 +572,7 @@
             <bool>true</bool>
            </property>
            <property name="text">
-            <string>Total Yearly Incomes:</string>
+            <string>Total Yearly Expenses:</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -609,14 +609,14 @@
        <item>
         <widget class="QPushButton" name="expensesNewIncomeButton">
          <property name="text">
-          <string>New Income</string>
+          <string>New Expense</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QPushButton" name="expensesDeleteIncomeButton">
          <property name="text">
-          <string>Delete Sel. Incomes</string>
+          <string>Delete Sel. Expenses</string>
          </property>
         </widget>
        </item>

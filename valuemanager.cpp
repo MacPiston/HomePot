@@ -13,6 +13,12 @@ QStringList valueManager::generatePersonsArray(dbManager database)
     {
         l1.append(database.incomesTableModel->record(i).value("person").toString());
     }
+    i1 = database.expensesTableModel->rowCount();
+    for (int i = 0; i < i1; i++)
+    {
+        l1.append(database.expensesTableModel->record(i).value("person").toString());
+    }
+    l1.removeDuplicates();
     return l1;
 }
 
