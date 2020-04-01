@@ -328,9 +328,9 @@
       <property name="geometry">
        <rect>
         <x>489</x>
-        <y>20</y>
+        <y>30</y>
         <width>221</width>
-        <height>104</height>
+        <height>81</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="summaryButtonsVerticalLayout">
@@ -360,9 +360,9 @@
       <property name="geometry">
        <rect>
         <x>300</x>
-        <y>130</y>
+        <y>120</y>
         <width>461</width>
-        <height>291</height>
+        <height>301</height>
        </rect>
       </property>
      </widget>
@@ -502,11 +502,136 @@
     </widget>
     <widget class="QWidget" name="expensesTab">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <attribute name="title">
       <string>Expenses</string>
      </attribute>
+     <widget class="QTableView" name="expensesTableView">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>501</width>
+        <height>491</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QWidget" name="verticalLayoutWidget_5">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>250</y>
+        <width>241</width>
+        <height>251</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="expensesSummaryVerticalLayout">
+       <item>
+        <layout class="QHBoxLayout" name="expensesMonthlySummaryHorizontalLayout">
+         <item>
+          <widget class="QComboBox" name="expensesMonthComboBox">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="expensesMonthlyLabel">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="text">
+            <string>Total Incomes:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="expensesMonthlyValueLabel">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="text">
+            <string>-</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="expensesYearlyHoriontalLayout">
+         <item>
+          <widget class="QLabel" name="expensesYearlyLabel">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="text">
+            <string>Total Yearly Incomes:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="expensesYearlyValueLabel">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="text">
+            <string>-</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="verticalLayoutWidget_6">
+      <property name="geometry">
+       <rect>
+        <x>560</x>
+        <y>70</y>
+        <width>161</width>
+        <height>121</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="expensesButtonsVerticalLayout">
+       <item>
+        <widget class="QPushButton" name="expensesNewIncomeButton">
+         <property name="text">
+          <string>New Income</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="expensesDeleteIncomeButton">
+         <property name="text">
+          <string>Delete Sel. Incomes</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="expensesSubmitButton">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string>Submit Changes</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </widget>
   </widget>

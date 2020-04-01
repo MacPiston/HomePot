@@ -66,13 +66,15 @@ QSqlTableModel *dbManager::getTableModel(const QString &tableName)
 
 QStringList dbManager::getDataArray(QSqlTableModel *model, QString value)
 {
-    int rows = model->rowCount();
     QStringList toReturn;
-    for (int i = 0; i < rows; i++)
+    for (int i = 0; i < model->rowCount(); i++)
     {
         toReturn.append(model->record(i).value(value).toString());
     }
     return toReturn;
 }
 
-
+void dbManager::closeDatabase()
+{
+    sqlDatabase.close();
+}

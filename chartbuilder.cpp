@@ -5,14 +5,11 @@ ChartBuilder::ChartBuilder()
 
 }
 
-QChart *ChartBuilder::buildChart(QString forKey, bool hideLegend)
+QChart *ChartBuilder::buildChart(QString forKey, bool hideLegend, valueManager vMgr, dbManager db)
 {
     QPieSeries *newSeries = new QPieSeries();
-    newSeries->append("Jane", 1);
-    newSeries->append("Joe", 2);
-    newSeries->append("Andy", 3);
-    newSeries->append("Barbara", 4);
-    newSeries->append("Axel", 5);
+    newSeries->append("Income", vMgr.generateTotalIncome(db));
+    newSeries->append("Expense", vMgr.generateTotalExpense(db));
 
     QChart *chart = new QChart();
     chart->addSeries(newSeries);

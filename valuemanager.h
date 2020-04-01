@@ -9,7 +9,9 @@ class valueManager
 {
 public:
     valueManager();
+
     QStringList generatePersonsArray(dbManager database);
+
     float generateTotalIncome(dbManager database);
     float generateTotalExpense(dbManager database);
 };

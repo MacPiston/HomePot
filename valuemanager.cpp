@@ -7,8 +7,12 @@ valueManager::valueManager()
 
 QStringList valueManager::generatePersonsArray(dbManager database)
 {
-    QStringList l1 = database.getDataArray(database.incomesTableModel, "person");
-    l1 += database.getDataArray(database.expensesTableModel, "person");
+    QStringList l1;
+    int i1 = database.incomesTableModel->rowCount();
+    for (int i = 0; i < i1; i++)
+    {
+        l1.append(database.incomesTableModel->record(i).value("person").toString());
+    }
     return l1;
 }
 

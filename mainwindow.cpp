@@ -12,11 +12,6 @@ MainWindow::MainWindow(QWidget *parent)
     //UI
     ui->setupUi(this);
 
-    //CHART
-    ChartBuilder cBuilder;
-    ui->chartViewOverall->setChart(cBuilder.buildChart("none", false));
-    ui->chartViewOverall->setRenderHint(QPainter::Antialiasing);
-
     //TABS
     ui->tabWidget->setTabEnabled(1, false);
     ui->tabWidget->setTabEnabled(2, false);
@@ -24,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
     //MONTH COMBOBOX
     ui->monthComboBox->addItems(months);
     ui->incomesMonthComboBox->addItems(months);
+    ui->expensesMonthComboBox->addItems(months);
 }
 
 MainWindow::~MainWindow()
@@ -37,13 +33,18 @@ void MainWindow::loadData()
 {
     //setup
 
-    //person selector
-    QStringList persons = vManager.generatePersonsArray(database);
-    ui->personListSelectorWidget->addItems(persons);
-    ui->personListSelectorWidget->sortItems(Qt::SortOrder::AscendingOrder);
-    ui->personListSelectorWidget->setSortingEnabled(true);
-    ui->personListSelectorWidget->setCurrentRow(0);
+    //chart
+    ui->chartViewOverall->setChart(cBuilder.buildChart("none", false, vManager, database));
+    ui->chartViewOverall->setRenderHint(QPainter::Antialiasing);
 
+    //incomes tab
+    loadIncomesTabData();
+
+    //expenses tab
+    loadExpensesTabData();
+
+    //person selector
+    loadPersonData();
 
     //total expense
     float totalExpense = vManager.generateTotalExpense(database);
@@ -67,16 +68,18 @@ void MainWindow::loadData()
         ui->statusValue->setText("Fine: " + QString::number(totalIncome - totalExpense));
         ui->statusValue->setStyleSheet("QLabel { background-color : green; color : black;}");
     }
-    //incomes tab
-    loadIncomesTabData();
 
-    //expenses tab
 
 }
 
 void MainWindow::loadPersonData()
 {
-    //TODO
+        ui->personListSelectorWidget->clear();
+        ui->personListSelectorWidget->addItems(vManager.generatePersonsArray(database));
+        ui->personListSelectorWidget->sortItems(Qt::SortOrder::AscendingOrder);
+        ui->personListSelectorWidget->setSortingEnabled(true);
+        ui->personListSelectorWidget->setCurrentRow(0);
+        ui->personListSelectorWidget->update();
 }
 
 void MainWindow::loadIncomesTabData()
@@ -87,6 +90,16 @@ void MainWindow::loadIncomesTabData()
 
     ui->incomesYearlyValueLabel->setText(QString::number(vManager.generateTotalIncome(database)));
     ui->incomesTableView->update();
+}
+
+void MainWindow::loadExpensesTabData()
+{
+    database.expensesTableModel->sort(0, Qt::SortOrder::AscendingOrder);
+    ui->expensesTableView->setModel(database.expensesTableModel);
+    ui->expensesTableView->resizeRowsToContents();
+
+    ui->expensesYearlyValueLabel->setText(QString::number(vManager.generateTotalExpense(database)));
+    ui->expensesTableView->update();
 }
 
 //RESPONDING TO EVENTS
@@ -121,8 +134,29 @@ void MainWindow::on_actionOpen_triggered() // loading existing database by top m
 
 void MainWindow::on_personListSelectorWidget_currentRowChanged(int currentRow) // response to change in person selector
 {
-    ui->personListSelectorWidget->setCurrentRow(currentRow);
-    loadPersonData(); //TODO
+    QString person = ui->personListSelectorWidget->item(currentRow)->text();
+    float pExpense = 0;
+    float pIncome = 0;
+
+    QSqlQuery pExpensesQuery;
+    pExpensesQuery.prepare("SELECT value FROM expenses WHERE person = ?");
+    pExpensesQuery.bindValue(0, person);
+    pExpensesQuery.exec();
+    while (pExpensesQuery.next())
+    {
+        pExpense += pExpensesQuery.value(0).toFloat();
+    }
+    ui->personLastExpense->setText(QString::number(pExpense));
+
+    QSqlQuery pIncomesQuery;
+    pIncomesQuery.prepare("SELECT value FROM incomes WHERE person = ?");
+    pIncomesQuery.bindValue(0, person);
+    pIncomesQuery.exec();
+    while (pIncomesQuery.next())
+    {
+        pIncome += pIncomesQuery.value(0).toFloat();
+    }
+    ui->personLastIncome->setText(QString::number(pIncome));
 }
 
 void MainWindow::on_incomesSubmitButton_clicked() // submitting changes to the database on INCOMES view
@@ -136,7 +170,7 @@ void MainWindow::on_incomesSubmitButton_clicked() // submitting changes to the d
         database.incomesTableModel->database().rollback();
     }
 
-    loadIncomesTabData();
+    loadData();
 }
 
 void MainWindow::on_incomesDeleteIncomeButton_clicked() // deleting selected rows on INCOMES view
@@ -147,13 +181,45 @@ void MainWindow::on_incomesDeleteIncomeButton_clicked() // deleting selected row
         QModelIndexList rows = selectedRows->selectedIndexes();
         database.incomesTableModel->removeRows(rows.first().row(), rows.count());
     }
-
 }
 
 void MainWindow::on_incomesNewIncomeButton_clicked() // adding new income
 {
     database.incomesTableModel->insertRows(0, 1);
 
+}
+
+void MainWindow::on_expensesNewIncomeButton_clicked()
+{
+    database.expensesTableModel->insertRows(0, 1);
+}
+
+void MainWindow::on_expensesDeleteIncomeButton_clicked()
+{
+    QItemSelectionModel *selectedRows = ui->expensesTableView->selectionModel();
+    if (selectedRows->hasSelection())
+    {
+        QModelIndexList rows = selectedRows->selectedIndexes();
+        database.expensesTableModel->removeRows(rows.first().row(), rows.count());
+    }
+}
+
+void MainWindow::on_expensesSubmitButton_clicked()
+{
+    database.expensesTableModel->database().transaction();
+    if (database.incomesTableModel->submitAll())
+    {
+        database.expensesTableModel->database().commit();
+    } else
+    {
+        database.expensesTableModel->database().rollback();
+    }
+    loadData();
+}
+
+void MainWindow::on_MainWindow_destroyed()
+{
+    database.closeDatabase();
 }
 
 //OTHERS

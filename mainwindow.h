@@ -4,6 +4,7 @@
 #include "ui_mainwindow.h"
 #include "dbmanager.h"
 #include "valuemanager.h"
+#include "chartbuilder.h"
 #include <QMainWindow>
 #include <QtSql>
 #include <QPieSeries>
@@ -24,6 +25,7 @@ public:
     void switchEnabledElements(bool state);
     void loadPersonData();
     void loadIncomesTabData();
+    void loadExpensesTabData();
 
 private slots:
     void on_newPushButton_clicked();
@@ -39,10 +41,19 @@ private slots:
 
     void on_incomesNewIncomeButton_clicked();
 
+    void on_expensesNewIncomeButton_clicked();
+
+    void on_expensesDeleteIncomeButton_clicked();
+
+    void on_expensesSubmitButton_clicked();
+
+    void on_MainWindow_destroyed();
+
 protected:
     Ui::MainWindow *ui;
     dbManager database;
     valueManager vManager;
+    ChartBuilder cBuilder;
     QStringList months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 };
 #endif // MAINWINDOW_H
