@@ -8,7 +8,7 @@ class ChartBuilder
 {
 public:
     ChartBuilder();
-    QChart *buildChart(QString forKey, bool hideLegend, valueManager vMgr, dbManager db);
+    QChart *buildEIChart(bool hideLegend, valueManager vMgr, dbManager db);
 };
 
 #endif // CHARTBUILDER_H

@@ -28,18 +28,15 @@ MainWindow::~MainWindow()
 }
 
 
-// DATA LOADING
+//------DATA LOADING-------
 void MainWindow::loadData()
 {
     //chart
-    ui->chartViewOverall->setChart(cBuilder.buildChart("none", false, vManager, database));
+    ui->chartViewOverall->setChart(cBuilder.buildEIChart(false, vManager, database));
     ui->chartViewOverall->setRenderHint(QPainter::Antialiasing);
 
     //summary
     loadSummaryData();
-
-    //person selector
-    //loadPersonData(); //included in summaryData
 
     //incomes tab
     loadIncomesTabData();
@@ -77,11 +74,11 @@ void MainWindow::loadSummaryData()
 
 void MainWindow::loadPersonData()
 {
-    //ui->personListSelectorWidget->clear();
+    ui->personListSelectorWidget->clear();
+    ui->personListSelectorWidget->setLayoutMode(QListView::SinglePass);
     ui->personListSelectorWidget->addItems(vManager.generatePersonsArray(database));
     ui->personListSelectorWidget->sortItems(Qt::SortOrder::AscendingOrder);
     ui->personListSelectorWidget->setSortingEnabled(true);
-    ui->personListSelectorWidget->setCurrentRow(0);
 }
 
 void MainWindow::loadIncomesTabData()
@@ -89,7 +86,6 @@ void MainWindow::loadIncomesTabData()
     database.incomesTableModel->setTable("incomes");
     database.incomesTableModel->sort(0, Qt::SortOrder::AscendingOrder);
     ui->incomesTableView->setModel(database.incomesTableModel);
-    ui->incomesTableView->resizeRowsToContents();
 
     ui->incomesYearlyValueLabel->setText(QString::number(vManager.generateTotalIncome(database)));
     ui->incomesTableView->update();
@@ -100,13 +96,14 @@ void MainWindow::loadExpensesTabData()
     database.expensesTableModel->setTable("expenses");
     database.expensesTableModel->sort(0, Qt::SortOrder::AscendingOrder);
     ui->expensesTableView->setModel(database.expensesTableModel);
-    ui->expensesTableView->resizeRowsToContents();
 
     ui->expensesYearlyValueLabel->setText(QString::number(vManager.generateTotalExpense(database)));
     ui->expensesTableView->update();
 }
 
-//RESPONDING TO EVENTS
+//------RESPONDING TO EVENTS------
+
+//--SUMMARY BUTTONS
 void MainWindow::on_newPushButton_clicked() // new database creation
 {
     QString dbFilename = QFileDialog::getSaveFileName(this, tr("Create Budget Database"), tr("newBudget.sqlite"), tr("*.sqlite"));
@@ -163,6 +160,7 @@ void MainWindow::on_personListSelectorWidget_currentRowChanged(int currentRow) /
     ui->personLastIncome->setText(QString::number(pIncome));
 }
 
+//--INCOMES BUTTONS
 void MainWindow::on_incomesSubmitButton_clicked() // submitting changes to the database on INCOMES view
 {
     database.incomesTableModel->database().transaction();
@@ -193,6 +191,7 @@ void MainWindow::on_incomesNewIncomeButton_clicked() // adding new income
 
 }
 
+//--EXPENSES BUTTONS
 void MainWindow::on_expensesNewIncomeButton_clicked() //adding new expense
 {
     database.expensesTableModel->insertRows(0, 1);
@@ -222,12 +221,7 @@ void MainWindow::on_expensesSubmitButton_clicked()
     loadData();
 }
 
-void MainWindow::on_MainWindow_destroyed()
-{
-    database.closeDatabase();
-}
-
-//OTHERS
+//--------OTHERS--------
 void MainWindow::switchEnabledElements(bool state)
 {
     ui->personListSelectorWidget->setEnabled(state);
@@ -244,4 +238,9 @@ void MainWindow::switchEnabledElements(bool state)
     ui->expensesTab->setEnabled(state);
     ui->statusValue->setEnabled(state);
     ui->status->setEnabled(state);
+}
+
+void MainWindow::on_MainWindow_destroyed()
+{
+    database.closeDatabase();
 }

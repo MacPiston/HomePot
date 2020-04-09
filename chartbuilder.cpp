@@ -5,7 +5,7 @@ ChartBuilder::ChartBuilder()
 
 }
 
-QChart *ChartBuilder::buildChart(QString forKey, bool hideLegend, valueManager vMgr, dbManager db)
+QChart *ChartBuilder::buildEIChart(bool hideLegend, valueManager vMgr, dbManager db)
 {
     QPieSeries *newSeries = new QPieSeries();
     newSeries->append("Income", vMgr.generateTotalIncome(db));
