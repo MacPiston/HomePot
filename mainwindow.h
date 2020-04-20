@@ -50,6 +50,8 @@ private slots:
 
     void on_MainWindow_destroyed();
 
+    void on_actionExit_triggered();
+
 protected:
     Ui::MainWindow *ui;
     dbManager database;

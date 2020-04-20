@@ -244,3 +244,8 @@ void MainWindow::on_MainWindow_destroyed()
 {
     database.closeDatabase();
 }
+
+void MainWindow::on_actionExit_triggered()
+{
+    QApplication::quit();
+}
