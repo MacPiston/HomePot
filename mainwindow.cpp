@@ -15,11 +15,6 @@ MainWindow::MainWindow(QWidget *parent)
     //TABS
     ui->tabWidget->setTabEnabled(1, false);
     ui->tabWidget->setTabEnabled(2, false);
-
-    //MONTH COMBOBOX
-    ui->monthComboBox->addItems(months);
-    ui->incomesMonthComboBox->addItems(months);
-    ui->expensesMonthComboBox->addItems(months);
 }
 
 MainWindow::~MainWindow()
@@ -32,7 +27,7 @@ MainWindow::~MainWindow()
 void MainWindow::loadData()
 {
     //chart
-    ui->chartViewOverall->setChart(cBuilder.buildEIChart(false, vManager, database));
+    ui->chartViewOverall->setChart(cBuilder.buildEIChart(vManager, database));
     ui->chartViewOverall->setRenderHint(QPainter::Antialiasing);
 
     //summary
@@ -60,16 +55,16 @@ void MainWindow::loadSummaryData()
     if ((diff > -1000) and (diff < 0))
     {
         ui->statusValue->setText("Warning: " + QString::number(totalIncome - totalExpense));
-        ui->statusValue->setStyleSheet("QLabel { background-color : orange; color : black;}");
+        ui->statusValue->setStyleSheet("QLabel { background-color: orange; color: black; border-radius: 9px}");
     } else if (diff < -1000)
     {
         ui->statusValue->setText("ALERT: " + QString::number(totalIncome - totalExpense));
-        ui->statusValue->setStyleSheet("QLabel { background-color : red; color : black;}");
+        ui->statusValue->setStyleSheet("QLabel { background-color: red; color: black; border-radius: 9px}");
     } else {
-        ui->statusValue->setText("Fine: " + QString::number(totalIncome - totalExpense));
-        ui->statusValue->setStyleSheet("QLabel { background-color : green; color : black;}");
+        ui->statusValue->setText("Good: " + QString::number(totalIncome - totalExpense));
+        ui->statusValue->setStyleSheet("QLabel { background-color: green; color: black; border-radius: 9px}");
     }
-    loadPersonData(); //CAUSES CRASH WHEN SUBMITTING EXPENSES
+    //loadPersonData(); //znowu się tu wypierdala.....
 }
 
 void MainWindow::loadPersonData()
@@ -87,7 +82,7 @@ void MainWindow::loadIncomesTabData()
     database.incomesTableModel->sort(0, Qt::SortOrder::AscendingOrder);
     ui->incomesTableView->setModel(database.incomesTableModel);
 
-    ui->incomesYearlyValueLabel->setText(QString::number(vManager.generateTotalIncome(database)));
+    ui->incomesTotalValueLabel->setText(QString::number(vManager.generateTotalIncome(database)));
     ui->incomesTableView->update();
 }
 
@@ -97,7 +92,7 @@ void MainWindow::loadExpensesTabData()
     database.expensesTableModel->sort(0, Qt::SortOrder::AscendingOrder);
     ui->expensesTableView->setModel(database.expensesTableModel);
 
-    ui->expensesYearlyValueLabel->setText(QString::number(vManager.generateTotalExpense(database)));
+    ui->expensesTotalValueLabel->setText(QString::number(vManager.generateTotalExpense(database)));
     ui->expensesTableView->update();
 }
 
@@ -136,8 +131,10 @@ void MainWindow::on_actionOpen_triggered() // loading existing database by top m
 void MainWindow::on_personListSelectorWidget_currentRowChanged(int currentRow) // response to change in person selector
 {
     QString person = ui->personListSelectorWidget->item(currentRow)->text();
-    float pExpense = 0;
-    float pIncome = 0;
+    float personExpense = 0;
+    float personIncome = 0;
+    float totalExpense = vManager.generateTotalExpense(database);
+    float totalIncome = vManager.generateTotalIncome(database);
 
     QSqlQuery pExpensesQuery;
     pExpensesQuery.prepare("SELECT value FROM expenses WHERE person = ?");
@@ -145,9 +142,10 @@ void MainWindow::on_personListSelectorWidget_currentRowChanged(int currentRow) /
     pExpensesQuery.exec();
     while (pExpensesQuery.next())
     {
-        pExpense += pExpensesQuery.value(0).toFloat();
+        personExpense += pExpensesQuery.value(0).toFloat();
     }
-    ui->personLastExpense->setText(QString::number(pExpense));
+    ui->personLastExpense->setText(QString::number(personExpense));
+    ui->personExpensePercent->setText(QString::number(personExpense * 100 / totalExpense) + "%");
 
     QSqlQuery pIncomesQuery;
     pIncomesQuery.prepare("SELECT value FROM incomes WHERE person = ?");
@@ -155,9 +153,10 @@ void MainWindow::on_personListSelectorWidget_currentRowChanged(int currentRow) /
     pIncomesQuery.exec();
     while (pIncomesQuery.next())
     {
-        pIncome += pIncomesQuery.value(0).toFloat();
+        personIncome += pIncomesQuery.value(0).toFloat();
     }
-    ui->personLastIncome->setText(QString::number(pIncome));
+    ui->personLastIncome->setText(QString::number(personIncome));
+    ui->personIncomePercent->setText(QString::number(personIncome * 100 / totalIncome) + "%");
 }
 
 //--INCOMES BUTTONS
@@ -171,7 +170,6 @@ void MainWindow::on_incomesSubmitButton_clicked() // submitting changes to the d
     {
         database.incomesTableModel->database().rollback();
     }
-    loadIncomesTabData();
     loadData();
 }
 
@@ -217,7 +215,6 @@ void MainWindow::on_expensesSubmitButton_clicked()
     {
         database.expensesTableModel->database().rollback();
     }
-    loadExpensesTabData();
     loadData();
 }
 
@@ -229,14 +226,8 @@ void MainWindow::switchEnabledElements(bool state)
     ui->totalIncomeValue->setEnabled(state);
     ui->totalExpense->setEnabled(state);
     ui->totalExpenseValue->setEnabled(state);
-    ui->monthlyRadioButton->setEnabled(state);
-    ui->monthComboBox->setEnabled(state);
-    ui->yearlyRadioButton->setEnabled(state);
     ui->tabWidget->setTabEnabled(1, state);
     ui->tabWidget->setTabEnabled(2, state);
-    ui->incomeTab->setEnabled(state);
-    ui->expensesTab->setEnabled(state);
-    ui->statusValue->setEnabled(state);
     ui->status->setEnabled(state);
 }
 

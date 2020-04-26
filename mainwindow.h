@@ -57,6 +57,5 @@ protected:
     dbManager database;
     valueManager vManager;
     ChartBuilder cBuilder;
-    QStringList months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 };
 #endif // MAINWINDOW_H

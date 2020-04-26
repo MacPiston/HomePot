@@ -5,14 +5,20 @@ ChartBuilder::ChartBuilder()
 
 }
 
-QChart *ChartBuilder::buildEIChart(bool hideLegend, valueManager vMgr, dbManager db)
+QChart *ChartBuilder::buildEIChart(valueManager vMgr, dbManager db)
 {
     QPieSeries *newSeries = new QPieSeries();
     newSeries->append("Income", vMgr.generateTotalIncome(db));
     newSeries->append("Expense", vMgr.generateTotalExpense(db));
+    newSeries->setLabelsVisible(true);
 
     QChart *chart = new QChart();
     chart->addSeries(newSeries);
-    chart->legend()->setEnabled(!hideLegend);
+    chart->legend()->hide();
+    chart->setTitle("Summary");
+    chart->setTheme(QChart::ChartThemeDark);
+    chart->setAnimationOptions(QChart::AllAnimations);
+    chart->setAnimationDuration(450);
+    chart->setBackgroundRoundness(9);
     return chart;
 }

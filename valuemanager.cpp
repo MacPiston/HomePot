@@ -8,13 +8,13 @@ valueManager::valueManager()
 QStringList valueManager::generatePersonsArray(dbManager database)
 {
     QStringList l1;
-    int i1 = database.incomesTableModel->rowCount();
-    for (int i = 0; i < i1; i++)
+
+    for (int i = 0; i < database.incomesTableModel->rowCount(); i++)
     {
         l1.append(database.incomesTableModel->record(i).value("person").toString());
     }
-    i1 = database.expensesTableModel->rowCount();
-    for (int i = 0; i < i1; i++)
+
+    for (int i = 0; i < database.expensesTableModel->rowCount(); i++)
     {
         l1.append(database.expensesTableModel->record(i).value("person").toString());
     }

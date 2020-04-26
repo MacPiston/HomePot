@@ -13,7 +13,6 @@ public:
 
     QSqlTableModel *expensesTableModel;
     QSqlTableModel *incomesTableModel;
-    QSqlTableModel *personsTableModel;
     QStringList getDataArray(QSqlTableModel *model, QString value);
 
     void createNewDatabase(QString filename);

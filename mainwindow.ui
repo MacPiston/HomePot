@@ -57,7 +57,7 @@
           <item>
            <layout class="QVBoxLayout" name="summaryMainVerticalLayout" stretch="1,3,1">
             <item>
-             <layout class="QHBoxLayout" name="budgetHorizontalLayout">
+             <layout class="QHBoxLayout" name="budgetHorizontalLayout" stretch="3,2">
               <item>
                <widget class="QLabel" name="budgetNameLabel">
                 <property name="sizePolicy">
@@ -73,25 +73,6 @@
                 </property>
                 <property name="text">
                  <string>Create or Open Budget</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="budgetStatusLabel">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="frameShape">
-                 <enum>QFrame::NoFrame</enum>
-                </property>
-                <property name="text">
-                 <string>-</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
@@ -134,68 +115,9 @@
              </layout>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="mainInfoHorizontalLayout" stretch="4,5">
+             <layout class="QHBoxLayout" name="mainInfoHorizontalLayout" stretch="8,9">
               <item>
-               <layout class="QVBoxLayout" name="leftSUmmaryVerticalLayout" stretch="0,0">
-                <item>
-                 <layout class="QHBoxLayout" name="timeSelectHorizontalLayout">
-                  <item>
-                   <layout class="QVBoxLayout" name="radioButtonsVerticalLayout">
-                    <item>
-                     <widget class="QRadioButton" name="monthlyRadioButton">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="text">
-                       <string>Monthly</string>
-                      </property>
-                      <property name="checked">
-                       <bool>true</bool>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QRadioButton" name="yearlyRadioButton">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="text">
-                       <string>Yearly</string>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                  <item>
-                   <widget class="QComboBox" name="monthComboBox">
-                    <property name="enabled">
-                     <bool>false</bool>
-                    </property>
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <property name="sizeAdjustPolicy">
-                     <enum>QComboBox::AdjustToMinimumContentsLength</enum>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </item>
+               <layout class="QVBoxLayout" name="leftSUmmaryVerticalLayout" stretch="0">
                 <item>
                  <layout class="QVBoxLayout" name="summaryValuesVerticalLayout">
                   <item>
@@ -491,14 +413,7 @@
               <item>
                <layout class="QHBoxLayout" name="incomesMonthlySummaryHorizontalLayout">
                 <item>
-                 <widget class="QComboBox" name="incomesMonthComboBox">
-                  <property name="enabled">
-                   <bool>true</bool>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="incomesMonthlyLabel">
+                 <widget class="QLabel" name="incomesTotalLabel">
                   <property name="enabled">
                    <bool>true</bool>
                   </property>
@@ -511,37 +426,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLabel" name="incomesMonthlyValueLabel">
-                  <property name="enabled">
-                   <bool>true</bool>
-                  </property>
-                  <property name="text">
-                   <string>-</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignCenter</set>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="incomesYearlyHoriontalLayout">
-                <item>
-                 <widget class="QLabel" name="incomesYearlyLabel">
-                  <property name="enabled">
-                   <bool>true</bool>
-                  </property>
-                  <property name="text">
-                   <string>Total Yearly Incomes:</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="incomesYearlyValueLabel">
+                 <widget class="QLabel" name="incomesTotalValueLabel">
                   <property name="enabled">
                    <bool>true</bool>
                   </property>
@@ -618,14 +503,7 @@
               <item>
                <layout class="QHBoxLayout" name="expensesMonthlySummaryHorizontalLayout">
                 <item>
-                 <widget class="QComboBox" name="expensesMonthComboBox">
-                  <property name="enabled">
-                   <bool>true</bool>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="expensesMonthlyLabel">
+                 <widget class="QLabel" name="expensesTotalLabel">
                   <property name="enabled">
                    <bool>true</bool>
                   </property>
@@ -638,37 +516,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLabel" name="expensesMonthlyValueLabel">
-                  <property name="enabled">
-                   <bool>true</bool>
-                  </property>
-                  <property name="text">
-                   <string>-</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignCenter</set>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="expensesYearlyHoriontalLayout">
-                <item>
-                 <widget class="QLabel" name="expensesYearlyLabel">
-                  <property name="enabled">
-                   <bool>true</bool>
-                  </property>
-                  <property name="text">
-                   <string>Total Yearly Expenses:</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="expensesYearlyValueLabel">
+                 <widget class="QLabel" name="expensesTotalValueLabel">
                   <property name="enabled">
                    <bool>true</bool>
                   </property>

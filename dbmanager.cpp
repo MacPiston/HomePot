@@ -1,6 +1,7 @@
 #include "dbmanager.h"
 #include <QtSql>
 #include <iostream>
+#include <QMessageBox>
 
 dbManager::dbManager()
 {
@@ -14,7 +15,12 @@ void dbManager::createNewDatabase(QString filename)
     sqlDatabase.setDatabaseName(filename);
     if (!sqlDatabase.open())
     {
-        //TODO-ERROR
+        QMessageBox errorBox;
+        errorBox.setText("Failed to create database file!");
+        errorBox.setInformativeText(sqlDatabase.lastError().text());
+        errorBox.setStandardButtons(QMessageBox::Ok);
+        errorBox.exec();
+
     } else {
         QSqlQuery query;
         query.exec("CREATE TABLE \"expenses\""
@@ -43,8 +49,11 @@ void dbManager::openExistingDatabase(QString filename)
     sqlDatabase.setDatabaseName(filename);
     if (!sqlDatabase.open())
     {
-        //TODO - ERROR
-    } else {
+        QMessageBox errorBox;
+        errorBox.setText("Failed to open database file!");
+        errorBox.setInformativeText(sqlDatabase.lastError().text());
+        errorBox.setStandardButtons(QMessageBox::Ok);
+        errorBox.exec();    } else {
         expensesTableModel = getTableModel("expenses");
         incomesTableModel = getTableModel("incomes");
     }
