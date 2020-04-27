@@ -8,8 +8,8 @@ ChartBuilder::ChartBuilder()
 QChart *ChartBuilder::buildEIChart(valueManager vMgr, dbManager db)
 {
     QPieSeries *newSeries = new QPieSeries();
-    newSeries->append("Income", vMgr.generateTotalIncome(db));
-    newSeries->append("Expense", vMgr.generateTotalExpense(db));
+    newSeries->append("Income", vMgr.getTotalIncome(db));
+    newSeries->append("Expense", vMgr.getTotalExpense(db));
     newSeries->setLabelsVisible(true);
 
     QChart *chart = new QChart();

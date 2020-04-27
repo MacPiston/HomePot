@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "chartbuilder.h"
+#include <QDebug>
 #include <QPieSeries>
 #include <QFileDialog>
 
@@ -15,6 +16,9 @@ MainWindow::MainWindow(QWidget *parent)
     //TABS
     ui->tabWidget->setTabEnabled(1, false);
     ui->tabWidget->setTabEnabled(2, false);
+
+    //BUTTONS
+    ui->exportSummaryPushButton->setEnabled(false);
 }
 
 MainWindow::~MainWindow()
@@ -43,11 +47,11 @@ void MainWindow::loadData()
 void MainWindow::loadSummaryData()
 {
     //total expense
-    float totalExpense = vManager.generateTotalExpense(database);
+    float totalExpense = vManager.getTotalExpense(database);
     ui->totalExpenseValue->setText(QString::number(totalExpense));
 
     //total income
-    float totalIncome = vManager.generateTotalIncome(database);
+    float totalIncome = vManager.getTotalIncome(database);
     ui->totalIncomeValue->setText(QString::number(totalIncome));
 
     //status
@@ -64,14 +68,14 @@ void MainWindow::loadSummaryData()
         ui->statusValue->setText("Good: " + QString::number(totalIncome - totalExpense));
         ui->statusValue->setStyleSheet("QLabel { background-color: green; color: black; border-radius: 9px}");
     }
-    //loadPersonData(); //znowu się tu wypierdala.....
+    loadPersonData(); //znowu się tu wypierdala.....
 }
 
 void MainWindow::loadPersonData()
 {
     ui->personListSelectorWidget->clear();
     ui->personListSelectorWidget->setLayoutMode(QListView::SinglePass);
-    ui->personListSelectorWidget->addItems(vManager.generatePersonsArray(database));
+    ui->personListSelectorWidget->addItems(vManager.getPersonsArray(database));
     ui->personListSelectorWidget->sortItems(Qt::SortOrder::AscendingOrder);
     ui->personListSelectorWidget->setSortingEnabled(true);
 }
@@ -82,7 +86,7 @@ void MainWindow::loadIncomesTabData()
     database.incomesTableModel->sort(0, Qt::SortOrder::AscendingOrder);
     ui->incomesTableView->setModel(database.incomesTableModel);
 
-    ui->incomesTotalValueLabel->setText(QString::number(vManager.generateTotalIncome(database)));
+    ui->incomesTotalValueLabel->setText(QString::number(vManager.getTotalIncome(database)));
     ui->incomesTableView->update();
 }
 
@@ -92,7 +96,7 @@ void MainWindow::loadExpensesTabData()
     database.expensesTableModel->sort(0, Qt::SortOrder::AscendingOrder);
     ui->expensesTableView->setModel(database.expensesTableModel);
 
-    ui->expensesTotalValueLabel->setText(QString::number(vManager.generateTotalExpense(database)));
+    ui->expensesTotalValueLabel->setText(QString::number(vManager.getTotalExpense(database)));
     ui->expensesTableView->update();
 }
 
@@ -102,8 +106,9 @@ void MainWindow::loadExpensesTabData()
 void MainWindow::on_newPushButton_clicked() // new database creation
 {
     QString dbFilename = QFileDialog::getSaveFileName(this, tr("Create Budget Database"), tr("newBudget.sqlite"), tr("*.sqlite"));
+    //qDebug() << dbFilename;
     database.createNewDatabase(dbFilename);
-    if (database.isOpen())
+    if (dbFilename != "")
     {
         loadData();
         ui->budgetNameLabel->setText(dbFilename);
@@ -114,8 +119,9 @@ void MainWindow::on_newPushButton_clicked() // new database creation
 void MainWindow::on_loadPushButton_clicked() // loading existing database
 {
     QString dbFilename = QFileDialog::getOpenFileName(this, tr("Open Budget Database"), tr(".../"), tr("*.sqlite"));
+    //qDebug() << dbFilename;
     database.openExistingDatabase(dbFilename);
-    if (database.isOpen())
+    if (dbFilename != "")
     {   
         loadData();
         ui->budgetNameLabel->setText(dbFilename);
@@ -133,8 +139,8 @@ void MainWindow::on_personListSelectorWidget_currentRowChanged(int currentRow) /
     QString person = ui->personListSelectorWidget->item(currentRow)->text();
     float personExpense = 0;
     float personIncome = 0;
-    float totalExpense = vManager.generateTotalExpense(database);
-    float totalIncome = vManager.generateTotalIncome(database);
+    float totalExpense = vManager.getTotalExpense(database);
+    float totalIncome = vManager.getTotalIncome(database);
 
     QSqlQuery pExpensesQuery;
     pExpensesQuery.prepare("SELECT value FROM expenses WHERE person = ?");
@@ -229,6 +235,7 @@ void MainWindow::switchEnabledElements(bool state)
     ui->tabWidget->setTabEnabled(1, state);
     ui->tabWidget->setTabEnabled(2, state);
     ui->status->setEnabled(state);
+    ui->exportSummaryPushButton->setEnabled(state);
 }
 
 void MainWindow::on_MainWindow_destroyed()

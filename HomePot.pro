@@ -19,6 +19,7 @@ ICON = ikonka.icns
 SOURCES += \
     chartbuilder.cpp \
     dbmanager.cpp \
+    exporter.cpp \
     main.cpp \
     mainwindow.cpp \
     valuemanager.cpp
@@ -26,6 +27,7 @@ SOURCES += \
 HEADERS += \
     chartbuilder.h \
     dbmanager.h \
+    exporter.h \
     mainwindow.h \
     valuemanager.h
 

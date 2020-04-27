@@ -10,9 +10,9 @@ class valueManager
 public:
     valueManager();
 
-    QStringList generatePersonsArray(dbManager database);
-    float generateTotalIncome(dbManager database);
-    float generateTotalExpense(dbManager database);
+    QStringList getPersonsArray(dbManager database);
+    float getTotalIncome(dbManager database);
+    float getTotalExpense(dbManager database);
 };
 
 #endif // VALUEMANAGER_H

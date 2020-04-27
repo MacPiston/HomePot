@@ -5,7 +5,7 @@ valueManager::valueManager()
 
 }
 
-QStringList valueManager::generatePersonsArray(dbManager database)
+QStringList valueManager::getPersonsArray(dbManager database)
 {
     QStringList l1;
 
@@ -22,7 +22,7 @@ QStringList valueManager::generatePersonsArray(dbManager database)
     return l1;
 }
 
-float valueManager::generateTotalIncome(dbManager database)
+float valueManager::getTotalIncome(dbManager database)
 {
     float toReturn = 0;
     for (int i = 0; i < database.incomesTableModel->rowCount(); i++)
@@ -32,7 +32,7 @@ float valueManager::generateTotalIncome(dbManager database)
     return toReturn;
 }
 
-float valueManager::generateTotalExpense(dbManager database)
+float valueManager::getTotalExpense(dbManager database)
 {
     float toReturn = 0;
     for (int i = 0; i < database.expensesTableModel->rowCount(); i++)

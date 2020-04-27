@@ -18,7 +18,7 @@ void dbManager::createNewDatabase(QString filename)
         QMessageBox errorBox;
         errorBox.setText("Failed to create database file!");
         errorBox.setInformativeText(sqlDatabase.lastError().text());
-        errorBox.setStandardButtons(QMessageBox::Ok);
+        errorBox.setDefaultButton(QMessageBox::Ok);
         errorBox.exec();
 
     } else {
@@ -52,8 +52,9 @@ void dbManager::openExistingDatabase(QString filename)
         QMessageBox errorBox;
         errorBox.setText("Failed to open database file!");
         errorBox.setInformativeText(sqlDatabase.lastError().text());
-        errorBox.setStandardButtons(QMessageBox::Ok);
-        errorBox.exec();    } else {
+        errorBox.setDefaultButton(QMessageBox::Ok);
+        errorBox.exec();
+    } else {
         expensesTableModel = getTableModel("expenses");
         incomesTableModel = getTableModel("incomes");
     }
@@ -85,5 +86,6 @@ QStringList dbManager::getDataArray(QSqlTableModel *model, QString value)
 
 void dbManager::closeDatabase()
 {
+    sqlDatabase.removeDatabase("QSQLITE");
     sqlDatabase.close();
 }

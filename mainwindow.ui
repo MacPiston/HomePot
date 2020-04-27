@@ -80,7 +80,7 @@
                </widget>
               </item>
               <item>
-               <layout class="QVBoxLayout" name="summaryButtonsVerticalLayout" stretch="0,0">
+               <layout class="QVBoxLayout" name="summaryButtonsVerticalLayout" stretch="0,0,0">
                 <property name="spacing">
                  <number>15</number>
                 </property>
@@ -107,6 +107,13 @@
                   </property>
                   <property name="text">
                    <string>Load</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="exportSummaryPushButton">
+                  <property name="text">
+                   <string>Export...</string>
                   </property>
                  </widget>
                 </item>
@@ -406,6 +413,13 @@
                 </property>
                </widget>
               </item>
+              <item>
+               <widget class="QPushButton" name="exportIncomesPushButton">
+                <property name="text">
+                 <string>Export Incomes...</string>
+                </property>
+               </widget>
+              </item>
              </layout>
             </item>
             <item>
@@ -493,6 +507,16 @@
                 </property>
                 <property name="text">
                  <string>Submit Changes</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="exportExpensesPushButton">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="text">
+                 <string>Export Expenses...</string>
                 </property>
                </widget>
               </item>
