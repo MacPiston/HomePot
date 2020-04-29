@@ -89,3 +89,7 @@ void dbManager::closeDatabase()
     sqlDatabase.removeDatabase("QSQLITE");
     sqlDatabase.close();
 }
+
+QSqlDatabase dbManager::getDatabase() {
+    return sqlDatabase.database("QSQLITE");
+}

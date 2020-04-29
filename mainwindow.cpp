@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "chartbuilder.h"
+#include "exporter.h"
 #include <QDebug>
 #include <QPieSeries>
 #include <QFileDialog>
@@ -68,7 +69,7 @@ void MainWindow::loadSummaryData()
         ui->statusValue->setText("Good: " + QString::number(totalIncome - totalExpense));
         ui->statusValue->setStyleSheet("QLabel { background-color: green; color: black; border-radius: 9px}");
     }
-    loadPersonData(); //znowu się tu wypierdala.....
+    loadPersonData(); //znowu się tu wypierdala..... edit: póki co nie
 }
 
 void MainWindow::loadPersonData()
@@ -84,20 +85,20 @@ void MainWindow::loadIncomesTabData()
 {
     database.incomesTableModel->setTable("incomes");
     database.incomesTableModel->sort(0, Qt::SortOrder::AscendingOrder);
-    ui->incomesTableView->setModel(database.incomesTableModel);
 
+    ui->incomesTableView->setModel(database.incomesTableModel);
     ui->incomesTotalValueLabel->setText(QString::number(vManager.getTotalIncome(database)));
-    ui->incomesTableView->update();
+    //ui->incomesTableView->update(); // powoduje crasha i chyba niepotrzebne
 }
 
 void MainWindow::loadExpensesTabData()
 {
     database.expensesTableModel->setTable("expenses");
     database.expensesTableModel->sort(0, Qt::SortOrder::AscendingOrder);
-    ui->expensesTableView->setModel(database.expensesTableModel);
 
+    ui->expensesTableView->setModel(database.expensesTableModel);
     ui->expensesTotalValueLabel->setText(QString::number(vManager.getTotalExpense(database)));
-    ui->expensesTableView->update();
+    //ui->expensesTableView->update(); // powoduje crasha i chyba nie potrzebne
 }
 
 //------RESPONDING TO EVENTS------
@@ -142,7 +143,7 @@ void MainWindow::on_personListSelectorWidget_currentRowChanged(int currentRow) /
     float totalExpense = vManager.getTotalExpense(database);
     float totalIncome = vManager.getTotalIncome(database);
 
-    QSqlQuery pExpensesQuery;
+    QSqlQuery pExpensesQuery(database.getDatabase());
     pExpensesQuery.prepare("SELECT value FROM expenses WHERE person = ?");
     pExpensesQuery.bindValue(0, person);
     pExpensesQuery.exec();
@@ -153,7 +154,7 @@ void MainWindow::on_personListSelectorWidget_currentRowChanged(int currentRow) /
     ui->personLastExpense->setText(QString::number(personExpense));
     ui->personExpensePercent->setText(QString::number(personExpense * 100 / totalExpense) + "%");
 
-    QSqlQuery pIncomesQuery;
+    QSqlQuery pIncomesQuery(database.getDatabase());
     pIncomesQuery.prepare("SELECT value FROM incomes WHERE person = ?");
     pIncomesQuery.bindValue(0, person);
     pIncomesQuery.exec();
@@ -222,6 +223,19 @@ void MainWindow::on_expensesSubmitButton_clicked()
         database.expensesTableModel->database().rollback();
     }
     loadData();
+}
+
+void MainWindow::on_exportIncomesPushButton_clicked()
+{
+    QString filename = QFileDialog::getSaveFileName(this, tr("Export to .txt file"), tr("incomesExport.txt"), tr("*.txt"));
+    if (filename != "") {
+        TableExporter e1("incomes");
+        try {
+            e1.exportToTxt(database, filename);
+        } catch (BadTableNameException &ex) {
+
+        }
+    }
 }
 
 //--------OTHERS--------

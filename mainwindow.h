@@ -52,6 +52,8 @@ private slots:
 
     void on_actionExit_triggered();
 
+    void on_exportIncomesPushButton_clicked();
+
 protected:
     Ui::MainWindow *ui;
     dbManager database;

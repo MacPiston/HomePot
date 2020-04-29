@@ -14,6 +14,7 @@ public:
     QSqlTableModel *expensesTableModel;
     QSqlTableModel *incomesTableModel;
     QStringList getDataArray(QSqlTableModel *model, QString value);
+    QSqlDatabase getDatabase();
 
     void createNewDatabase(QString filename);
     void openExistingDatabase(QString filename);
