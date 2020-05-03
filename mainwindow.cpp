@@ -191,6 +191,19 @@ void MainWindow::on_incomesNewIncomeButton_clicked() // adding new income
 
 }
 
+void MainWindow::on_exportIncomesPushButton_clicked()
+{
+    QString filename = QFileDialog::getSaveFileName(this, tr("Export to .txt file"), tr("incomesExport.txt"), tr("*.txt"));
+    if (filename != "") {
+        TableExporter e1;
+        try {
+            e1.exportToTxt(database, filename);
+        } catch (BadTableNameException &ex) {
+
+        }
+    }
+}
+
 //--EXPENSES BUTTONS
 void MainWindow::on_expensesNewIncomeButton_clicked() //adding new expense
 {
