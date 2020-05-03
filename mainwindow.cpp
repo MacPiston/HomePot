@@ -167,7 +167,7 @@ void MainWindow::on_personListSelectorWidget_currentRowChanged(int currentRow) /
 }
 
 //--INCOMES BUTTONS
-void MainWindow::on_incomesSubmitButton_clicked() // submitting changes to the database on INCOMES view
+void MainWindow::on_incomesSubmitButton_clicked() // saving changes made earlier
 {
     database.incomesTableModel->database().transaction();
     if (database.incomesTableModel->submitAll())
@@ -180,7 +180,7 @@ void MainWindow::on_incomesSubmitButton_clicked() // submitting changes to the d
     loadData();
 }
 
-void MainWindow::on_incomesDeleteIncomeButton_clicked() // deleting selected rows on INCOMES view
+void MainWindow::on_incomesDeleteIncomeButton_clicked() // deleting selected incomes
 {
     QItemSelectionModel *selectedRows = ui->incomesTableView->selectionModel();
     if (selectedRows->hasSelection())
@@ -196,39 +196,9 @@ void MainWindow::on_incomesNewIncomeButton_clicked() // adding new income
 
 }
 
-//--EXPENSES BUTTONS
-void MainWindow::on_expensesNewIncomeButton_clicked() //adding new expense
-{
-    database.expensesTableModel->insertRows(0, 1);
-}
-
-void MainWindow::on_expensesDeleteIncomeButton_clicked()
-{
-    QItemSelectionModel *selectedRows = ui->expensesTableView->selectionModel();
-    if (selectedRows->hasSelection())
-    {
-        QModelIndexList rows = selectedRows->selectedIndexes();
-        database.expensesTableModel->removeRows(rows.first().row(), rows.count());
-    }
-}
-
-void MainWindow::on_expensesSubmitButton_clicked()
-{
-    database.expensesTableModel->database().transaction();
-    if (database.expensesTableModel->submitAll())
-    {
-        database.expensesTableModel->database().commit();
-    } else
-    {
-        database.expensesTableModel->database().rollback();
-    }
-    loadData();
-}
-
-void MainWindow::on_exportIncomesPushButton_clicked()
+void MainWindow::on_exportIncomesPushButton_clicked() //exorting incomes data to file
 {
     QString filename = QFileDialog::getSaveFileName(this, tr("Export to .txt file"), tr("incomesExport"), tr("Text file (*.txt);;Excel datasheet (*.xlsx)"));
-    qDebug() << filename;
 
     if (!filename.isEmpty() and filename.endsWith(".txt")) {
         TableExporter e1("incomes", database);
@@ -254,6 +224,62 @@ void MainWindow::on_exportIncomesPushButton_clicked()
 
 }
 
+//--EXPENSES BUTTONS
+void MainWindow::on_expensesNewIncomeButton_clicked() //adding new expense
+{
+    database.expensesTableModel->insertRows(0, 1);
+}
+
+void MainWindow::on_expensesDeleteIncomeButton_clicked() //deleting selected expenses
+{
+    QItemSelectionModel *selectedRows = ui->expensesTableView->selectionModel();
+    if (selectedRows->hasSelection())
+    {
+        QModelIndexList rows = selectedRows->selectedIndexes();
+        database.expensesTableModel->removeRows(rows.first().row(), rows.count());
+    }
+}
+
+void MainWindow::on_expensesSubmitButton_clicked() //saving changes made earlier
+{
+    database.expensesTableModel->database().transaction();
+    if (database.expensesTableModel->submitAll())
+    {
+        database.expensesTableModel->database().commit();
+    } else
+    {
+        database.expensesTableModel->database().rollback();
+    }
+    loadData();
+}
+
+void MainWindow::on_exportExpensesPushButton_clicked() //exporting expenses data to file
+{
+    QString filename = QFileDialog::getSaveFileName(this, tr("Export to .txt file"), tr("expensesExport"), tr("Text file (*.txt);;Excel datasheet (*.xlsx)"));
+
+    if (!filename.isEmpty() and filename.endsWith(".txt")) {
+        TableExporter e1("expenses", database);
+        try {
+            e1.exportToTxt(filename);
+        } catch (BadTableNameException &ex) {
+
+        }
+    } else if (!filename.isEmpty() and filename.endsWith(".xlsx")) {
+        TableExporter e2("expenses", database);
+        try {
+            e2.exportToExcel(filename);
+        } catch (BadTableNameException &ex) {
+
+        }
+    } else {
+        QMessageBox errorBox;
+        errorBox.setText("Couldn't export file:");
+        errorBox.setDetailedText("Wrong file extension selected");
+        errorBox.setDefaultButton(QMessageBox::Ok);
+        errorBox.exec();
+    }
+}
+
 //--------OTHERS--------
 void MainWindow::switchEnabledElements(bool state)
 {
@@ -277,3 +303,5 @@ void MainWindow::on_actionExit_triggered()
 {
     QApplication::quit();
 }
+
+

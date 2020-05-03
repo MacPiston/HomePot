@@ -36,18 +36,9 @@ void TableExporter::exportToTxt(QString filename) {
                 outputFile << query.value("person").toString().toStdString() << "\n";
             }
             outputFile.close();
-
-            QMessageBox infoBox;
-            infoBox.setText("Exported to: " + filename);
-            infoBox.setDefaultButton(QMessageBox::Ok);
-            infoBox.exec();
+            printSuccess(filename);
         } else {
-            qDebug() << query.lastError();
-            QMessageBox errorBox;
-            errorBox.setText("Failed to export file:");
-            errorBox.setDetailedText(query.lastError().text());
-            errorBox.setDefaultButton(QMessageBox::Ok);
-            errorBox.exec();
+            printFailure(query.lastError());
         }
     }
 }
@@ -56,11 +47,12 @@ void TableExporter::exportToExcel(QString filename) {
     if (tablename != "incomes" and tablename != "expenses") {
         throw BadTableNameException();
     } else {
-        QXlsx::Document xlsx;
         QSqlQuery query(dbm.getDatabase());
         query.prepare("SELECT * FROM " + tablename);
         if (query.exec()) {
+            QXlsx::Document xlsx;
             int rowCounter = 1;
+
             while (query.next()) {
                 xlsx.write(rowCounter, 1, query.value("name").toString());
                 xlsx.write(rowCounter, 2, query.value("value").toDouble());
@@ -69,8 +61,28 @@ void TableExporter::exportToExcel(QString filename) {
                 xlsx.write(rowCounter, 5, query.value("person").toString());
                 rowCounter++;
             }
+
             xlsx.currentSheet()->sheetName() = "Incomes";
             xlsx.saveAs(filename);
+            printSuccess(filename);
+        } else {
+            printFailure(query.lastError());
         }
     }
+}
+
+void TableExporter::printFailure(QSqlError err) {
+    qDebug() << err;
+    QMessageBox errorBox;
+    errorBox.setText("Failed to export file:");
+    errorBox.setDetailedText(err.text());
+    errorBox.setDefaultButton(QMessageBox::Ok);
+    errorBox.exec();
+}
+
+void TableExporter::printSuccess(QString filename) {
+    QMessageBox infoBox;
+    infoBox.setText("Exported to: " + filename);
+    infoBox.setDefaultButton(QMessageBox::Ok);
+    infoBox.exec();
 }
