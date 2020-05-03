@@ -65,16 +65,16 @@ bool dbManager::isOpen()
     return sqlDatabase.isOpen();
 }
 
-QSqlTableModel *dbManager::getTableModel(const QString &tableName)
+std::shared_ptr<QSqlTableModel> dbManager::getTableModel(const QString &tableName)
 {
-    QSqlTableModel *model = new QSqlTableModel(nullptr, sqlDatabase);
+    std::shared_ptr<QSqlTableModel> model(new QSqlTableModel(nullptr, sqlDatabase));
     model->setTable(tableName);
     model->setEditStrategy(QSqlTableModel::OnManualSubmit);
     model->select();
     return model;
 }
 
-QStringList dbManager::getDataArray(QSqlTableModel *model, QString value)
+QStringList dbManager::getDataArray(std::shared_ptr<QSqlTableModel> model, QString value)
 {
     QStringList toReturn;
     for (int i = 0; i < model->rowCount(); i++)

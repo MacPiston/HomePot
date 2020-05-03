@@ -86,7 +86,7 @@ void MainWindow::loadIncomesTabData()
     database.incomesTableModel->setTable("incomes");
     database.incomesTableModel->sort(0, Qt::SortOrder::AscendingOrder);
 
-    ui->incomesTableView->setModel(database.incomesTableModel);
+    ui->incomesTableView->setModel(database.incomesTableModel.get());
     ui->incomesTotalValueLabel->setText(QString::number(vManager.getTotalIncome(database)));
     //ui->incomesTableView->update(); // powoduje crasha i chyba niepotrzebne
 }
@@ -96,7 +96,7 @@ void MainWindow::loadExpensesTabData()
     database.expensesTableModel->setTable("expenses");
     database.expensesTableModel->sort(0, Qt::SortOrder::AscendingOrder);
 
-    ui->expensesTableView->setModel(database.expensesTableModel);
+    ui->expensesTableView->setModel(database.expensesTableModel.get());
     ui->expensesTotalValueLabel->setText(QString::number(vManager.getTotalExpense(database)));
     //ui->expensesTableView->update(); // powoduje crasha i chyba nie potrzebne
 }

@@ -7,13 +7,13 @@ class dbManager
 {
 private:
     QSqlDatabase sqlDatabase;
-    QSqlTableModel *getTableModel(const QString &tableName);
+    std::shared_ptr<QSqlTableModel> getTableModel(const QString &tableName);
 public:
     dbManager();
 
-    QSqlTableModel *expensesTableModel;
-    QSqlTableModel *incomesTableModel;
-    QStringList getDataArray(QSqlTableModel *model, QString value);
+    std::shared_ptr<QSqlTableModel> expensesTableModel;
+    std::shared_ptr<QSqlTableModel> incomesTableModel;
+    QStringList getDataArray(std::shared_ptr<QSqlTableModel> model, QString value);
     QSqlDatabase getDatabase();
 
     void createNewDatabase(QString filename);
