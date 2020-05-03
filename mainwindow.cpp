@@ -227,15 +227,31 @@ void MainWindow::on_expensesSubmitButton_clicked()
 
 void MainWindow::on_exportIncomesPushButton_clicked()
 {
-    QString filename = QFileDialog::getSaveFileName(this, tr("Export to .txt file"), tr("incomesExport.txt"), tr("*.txt"));
-    if (filename != "") {
-        TableExporter e1("incomes");
+    QString filename = QFileDialog::getSaveFileName(this, tr("Export to .txt file"), tr("incomesExport"), tr("Text file (*.txt);;Excel datasheet (*.xlsx)"));
+    qDebug() << filename;
+
+    if (!filename.isEmpty() and filename.endsWith(".txt")) {
+        TableExporter e1("incomes", database);
         try {
-            e1.exportToTxt(database, filename);
+            e1.exportToTxt(filename);
         } catch (BadTableNameException &ex) {
 
         }
+    } else if (!filename.isEmpty() and filename.endsWith(".xlsx")) {
+        TableExporter e2("incomes", database);
+        try {
+            e2.exportToExcel(filename);
+        } catch (BadTableNameException &ex) {
+
+        }
+    } else {
+        QMessageBox errorBox;
+        errorBox.setText("Couldn't export file:");
+        errorBox.setDetailedText("Wrong file extension selected");
+        errorBox.setDefaultButton(QMessageBox::Ok);
+        errorBox.exec();
     }
+
 }
 
 //--------OTHERS--------

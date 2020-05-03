@@ -6,22 +6,26 @@
 class Exporter
 {
 public:
-    virtual void exportToTxt(dbManager database, QString filename) = 0;
-    virtual void exportToExcel(dbManager database, QString filename) = 0;
+    virtual void exportToTxt(QString filename) = 0;
+    virtual void exportToExcel(QString filename) = 0;
 };
 
 class SummaryExporter : public Exporter {
+    QString tablename;
+    dbManager dbm;
 public:
-    void exportToTxt(dbManager database, QString filename) override;
-    void exportToExcel(dbManager database, QString filename) override;
+    void exportToTxt(QString filename) override;
+    void exportToExcel(QString filename) override;
+    SummaryExporter(QString table, dbManager database);
 };
 
 class TableExporter : public Exporter {
-    QString tableName;
+    QString tablename;
+    dbManager dbm;
 public:
-    void exportToTxt(dbManager database, QString filename) override;
-    void exportToExcel(dbManager database, QString filename) override;
-    TableExporter(QString table);
+    void exportToTxt(QString filename) override;
+    void exportToExcel(QString filename) override;
+    TableExporter(QString table, dbManager database);
 };
 
 class BadTableNameException : QException {
