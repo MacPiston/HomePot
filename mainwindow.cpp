@@ -88,7 +88,6 @@ void MainWindow::loadIncomesTabData()
 
     ui->incomesTableView->setModel(database.incomesTableModel.get());
     ui->incomesTotalValueLabel->setText(QString::number(vManager.getTotalIncome(database)));
-    //ui->incomesTableView->update(); // powoduje crasha i chyba niepotrzebne
 }
 
 void MainWindow::loadExpensesTabData()
@@ -98,7 +97,6 @@ void MainWindow::loadExpensesTabData()
 
     ui->expensesTableView->setModel(database.expensesTableModel.get());
     ui->expensesTotalValueLabel->setText(QString::number(vManager.getTotalExpense(database)));
-    //ui->expensesTableView->update(); // powoduje crasha i chyba nie potrzebne
 }
 
 //------RESPONDING TO EVENTS------
@@ -107,7 +105,6 @@ void MainWindow::loadExpensesTabData()
 void MainWindow::on_newPushButton_clicked() // new database creation
 {
     QString dbFilename = QFileDialog::getSaveFileName(this, tr("Create Budget Database"), tr("newBudget.sqlite"), tr("*.sqlite"));
-    //qDebug() << dbFilename;
     database.createNewDatabase(dbFilename);
     if (dbFilename != "")
     {
@@ -120,7 +117,6 @@ void MainWindow::on_newPushButton_clicked() // new database creation
 void MainWindow::on_loadPushButton_clicked() // loading existing database
 {
     QString dbFilename = QFileDialog::getOpenFileName(this, tr("Open Budget Database"), tr(".../"), tr("*.sqlite"));
-    //qDebug() << dbFilename;
     database.openExistingDatabase(dbFilename);
     if (dbFilename != "")
     {   

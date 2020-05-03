@@ -23,18 +23,35 @@ void TableExporter::exportToTxt(QString filename) {
         throw BadTableNameException();
     } else {
         QSqlQuery query(dbm.getDatabase());
+        std::map<std::string, float> personSum;
+
         query.prepare("SELECT * FROM " + tablename);
         if (query.exec()) {
             std::ofstream outputFile;
             outputFile.open(filename.toStdString(), std::ofstream::trunc);
 
+            outputFile << "-------- Records --------\n";
             while (query.next()) {
+                std::string person = query.value("person").toString().toStdString();
+                double value = query.value("value").toDouble();
                 outputFile << query.value("name").toString().toStdString() << " ";
-                outputFile << query.value("value").toDouble() << " ";
+                outputFile << value << " ";
                 outputFile << query.value("category").toString().toStdString() << " ";
                 outputFile << query.value("date").toString().toStdString() << " ";
-                outputFile << query.value("person").toString().toStdString() << "\n";
+                outputFile << person << "\n";
+
+                if (personSum.find(person) == personSum.end()) {
+                    personSum.insert(std::pair<std::string, double>(person, value));
+                } else {
+                    personSum[person] += value;
+                }
             }
+            outputFile << "-------- Summary --------\n";
+            for (auto element = personSum.begin(), end = personSum.end(); element != end; element = personSum.upper_bound(element->first)) {
+                outputFile << element->first << " " << element->second << "\n";
+            }
+            outputFile << "Exported on: " << QDateTime::currentDateTime().toString("hh:mm dd.MM.yy").toStdString() << "\n";
+
             outputFile.close();
             printSuccess(filename);
         } else {
@@ -63,8 +80,12 @@ void TableExporter::exportToExcel(QString filename) {
             }
 
             xlsx.currentSheet()->sheetName() = "Incomes";
-            xlsx.saveAs(filename);
-            printSuccess(filename);
+
+            if (xlsx.saveAs(filename)) {
+                printSuccess(filename);
+            } else {
+                printFailure("Failed to save .xlsx file");
+            }
         } else {
             printFailure(query.lastError());
         }
@@ -85,4 +106,13 @@ void TableExporter::printSuccess(QString filename) {
     infoBox.setText("Exported to: " + filename);
     infoBox.setDefaultButton(QMessageBox::Ok);
     infoBox.exec();
+}
+
+void TableExporter::printFailure(QString err) {
+    qDebug() << err;
+    QMessageBox errorBox;
+    errorBox.setText("Failed to export file:");
+    errorBox.setDetailedText(err);
+    errorBox.setDefaultButton(QMessageBox::Ok);
+    errorBox.exec();
 }

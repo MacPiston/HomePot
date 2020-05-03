@@ -24,6 +24,7 @@ class TableExporter : public Exporter {
     dbManager dbm;
     void printSuccess(QString filename);
     void printFailure(QSqlError err);
+    void printFailure(QString err);
 public:
     void exportToTxt(QString filename) override;
     void exportToExcel(QString filename) override;
