@@ -1,6 +1,7 @@
 #ifndef EXPORTER_H
 #define EXPORTER_H
 #include "dbmanager.h"
+#include "valuemanager.h"
 
 
 class Exporter
@@ -8,23 +9,24 @@ class Exporter
 public:
     virtual void exportToTxt(QString filename) = 0;
     virtual void exportToExcel(QString filename) = 0;
+    void printSuccess(QString filename);
+    void printFailure(QString err);
+    void printFailure(QSqlError err);
 };
 
 class SummaryExporter : public Exporter {
-    QString tablename;
     dbManager dbm;
+    valueManager vm;
 public:
     void exportToTxt(QString filename) override;
     void exportToExcel(QString filename) override;
-    SummaryExporter(QString table, dbManager database);
+    SummaryExporter(dbManager dbMgr, valueManager vMgr);
 };
 
 class TableExporter : public Exporter {
     QString tablename;
     dbManager dbm;
-    void printSuccess(QString filename);
-    void printFailure(QSqlError err);
-    void printFailure(QString err);
+
 public:
     void exportToTxt(QString filename) override;
     void exportToExcel(QString filename) override;

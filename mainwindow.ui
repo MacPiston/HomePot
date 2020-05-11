@@ -39,7 +39,7 @@
        <bool>true</bool>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="summaryTab">
        <property name="sizePolicy">
@@ -113,7 +113,7 @@
                 <item>
                  <widget class="QPushButton" name="exportSummaryPushButton">
                   <property name="text">
-                   <string>Export...</string>
+                   <string>Export Summary...</string>
                   </property>
                  </widget>
                 </item>
@@ -288,7 +288,29 @@
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="personLastIncome">
+               <widget class="QLabel" name="personIncomePercentLabel">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+                  <horstretch>1</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>Income percentage:</string>
+                </property>
+                <property name="scaledContents">
+                 <bool>false</bool>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+                <property name="wordWrap">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="personIncomePercent">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
                   <horstretch>1</horstretch>
@@ -304,7 +326,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="personLastExpense">
+               <widget class="QLabel" name="personExpensePercentLabel">
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
@@ -318,31 +340,18 @@
                  <enum>Qt::NoContextMenu</enum>
                 </property>
                 <property name="text">
-                 <string>-</string>
+                 <string>Expense percentage:</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
+                </property>
+                <property name="wordWrap">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
               <item>
                <widget class="QLabel" name="personExpensePercent">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-                  <horstretch>1</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string>-</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="personIncomePercent">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
                   <horstretch>1</horstretch>

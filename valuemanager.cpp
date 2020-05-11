@@ -41,3 +41,28 @@ float valueManager::getTotalExpense(dbManager database)
     }
     return toReturn;
 }
+
+float valueManager::getPersonExpense(dbManager database, QString person) {
+    float toReturn = 0;
+    QSqlQuery pExpenseQuery(database.getDatabase());
+    pExpenseQuery.prepare("SELECT value FROM expenses WHERE person = ?");
+    pExpenseQuery.bindValue(0, person);
+    pExpenseQuery.exec();
+    while (pExpenseQuery.next()) {
+        toReturn += pExpenseQuery.value(0).toFloat();
+    }
+    return toReturn;
+
+}
+
+float valueManager::getPersonIncome(dbManager database, QString person) {
+    float toReturn = 0;
+    QSqlQuery pIncomeQuery(database.getDatabase());
+    pIncomeQuery.prepare("SELECT value FROM incomes WHERE person = ?");
+    pIncomeQuery.bindValue(0, person);
+    pIncomeQuery.exec();
+    while (pIncomeQuery.next()) {
+        toReturn += pIncomeQuery.value(0).toFloat();
+    }
+    return toReturn;
+}

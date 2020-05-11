@@ -134,32 +134,20 @@ void MainWindow::on_actionOpen_triggered() // loading existing database by top m
 void MainWindow::on_personListSelectorWidget_currentRowChanged(int currentRow) // response to change in person selector
 {
     QString person = ui->personListSelectorWidget->item(currentRow)->text();
-    float personExpense = 0;
-    float personIncome = 0;
-    float totalExpense = vManager.getTotalExpense(database);
-    float totalIncome = vManager.getTotalIncome(database);
 
-    QSqlQuery pExpensesQuery(database.getDatabase());
-    pExpensesQuery.prepare("SELECT value FROM expenses WHERE person = ?");
-    pExpensesQuery.bindValue(0, person);
-    pExpensesQuery.exec();
-    while (pExpensesQuery.next())
-    {
-        personExpense += pExpensesQuery.value(0).toFloat();
-    }
-    ui->personLastExpense->setText(QString::number(personExpense));
-    ui->personExpensePercent->setText(QString::number(personExpense * 100 / totalExpense) + "%");
+    ui->personExpensePercent->setText(QString::number(vManager.getPersonExpense(database, person) * 100 / vManager.getTotalExpense(database), 'f', 2) + "%");
 
-    QSqlQuery pIncomesQuery(database.getDatabase());
-    pIncomesQuery.prepare("SELECT value FROM incomes WHERE person = ?");
-    pIncomesQuery.bindValue(0, person);
-    pIncomesQuery.exec();
-    while (pIncomesQuery.next())
-    {
-        personIncome += pIncomesQuery.value(0).toFloat();
+    ui->personIncomePercent->setText(QString::number(vManager.getPersonIncome(database, person) * 100 / vManager.getTotalIncome(database), 'f', 2) + "%");
+}
+
+void MainWindow::on_exportSummaryPushButton_clicked()
+{
+    QString filename = QFileDialog::getSaveFileName(this, tr("Export to .txt file"), tr("summaryExport"), tr("Text file (*.txt);;Excel datasheet (*.xlsx)"));
+    if (!filename.isEmpty() and filename.endsWith(".txt")) {
+        SummaryExporter s1(database, vManager);
+        s1.exportToTxt(filename);
     }
-    ui->personLastIncome->setText(QString::number(personIncome));
-    ui->personIncomePercent->setText(QString::number(personIncome * 100 / totalIncome) + "%");
+
 }
 
 //--INCOMES BUTTONS
@@ -299,5 +287,3 @@ void MainWindow::on_actionExit_triggered()
 {
     QApplication::quit();
 }
-
-

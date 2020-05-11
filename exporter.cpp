@@ -1,16 +1,41 @@
 #include "exporter.h"
 #include "xlsxdocument.h"
 #include "fstream"
+#include "valuemanager.h"
 #include <QMessageBox>
 #include <QDebug>
 
 void SummaryExporter::exportToTxt(QString filename) {
+        QStringList persons = vm.getPersonsArray(dbm);
+        float totalExpense = vm.getTotalExpense(dbm);
+        float totalIncome = vm.getTotalIncome(dbm);
 
+        std::ofstream outputFile;
+        outputFile.open(filename.toStdString(), std::ofstream::trunc);
+        if (outputFile.is_open()) {
+        outputFile << "---- Summary ----\n";
+        outputFile << "Total expense: " << totalExpense << "\n";
+        outputFile << "Total income: " << totalIncome << "\n";
+
+        outputFile << "---- Persons ---- (expense income)\n";
+        for (auto p : persons) {
+            outputFile << p.toStdString() << " : " << vm.getPersonExpense(dbm, p) << " " << vm.getPersonIncome(dbm, p) << "\n";
+        }
+        outputFile << "Exported on: " << QDateTime::currentDateTime().toString("hh:mm dd.MM.yy").toStdString() << "\n";
+        outputFile.close();
+        printSuccess(filename);
+        } else {
+            printFailure(filename);
+        }
 }
 
 void SummaryExporter::exportToExcel(QString filename) {
     QXlsx::Document xlsx;
+}
 
+SummaryExporter::SummaryExporter(dbManager dbMgr, valueManager vMgr) {
+    this->vm = vMgr;
+    this->dbm = dbMgr;
 }
 
 TableExporter::TableExporter(QString table, dbManager database) {
@@ -92,7 +117,7 @@ void TableExporter::exportToExcel(QString filename) {
     }
 }
 
-void TableExporter::printFailure(QSqlError err) {
+void Exporter::printFailure(QSqlError err) {
     qDebug() << err;
     QMessageBox errorBox;
     errorBox.setText("Failed to export file:");
@@ -101,14 +126,14 @@ void TableExporter::printFailure(QSqlError err) {
     errorBox.exec();
 }
 
-void TableExporter::printSuccess(QString filename) {
+void Exporter::printSuccess(QString filename) {
     QMessageBox infoBox;
     infoBox.setText("Exported to: " + filename);
     infoBox.setDefaultButton(QMessageBox::Ok);
     infoBox.exec();
 }
 
-void TableExporter::printFailure(QString err) {
+void Exporter::printFailure(QString err) {
     qDebug() << err;
     QMessageBox errorBox;
     errorBox.setText("Failed to export file:");
