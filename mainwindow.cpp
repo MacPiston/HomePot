@@ -74,9 +74,9 @@ void MainWindow::loadSummaryData()
 
 void MainWindow::loadPersonData()
 {
-    ui->personListSelectorWidget->clear();
     ui->personListSelectorWidget->setLayoutMode(QListView::SinglePass);
-    ui->personListSelectorWidget->addItems(vManager.getPersonsArray(database));
+    ui->personListSelectorWidget->clear();
+    ui->personListSelectorWidget->insertItems(0, vManager.getPersonsArray(database));
     //ui->personListSelectorWidget->sortItems(Qt::SortOrder::AscendingOrder);
     //ui->personListSelectorWidget->setSortingEnabled(true);
 }
@@ -130,13 +130,19 @@ void MainWindow::on_actionOpen_triggered() // loading existing database by top m
 {
     on_loadPushButton_clicked();
 }
-
+/*
 void MainWindow::on_personListSelectorWidget_currentRowChanged(int currentRow) // response to change in person selector
 {
     QString person = ui->personListSelectorWidget->item(currentRow)->text();
 
     ui->personExpensePercent->setText(QString::number(vManager.getPersonExpense(database, person) * 100 / vManager.getTotalExpense(database), 'f', 2) + "%");
-
+    ui->personIncomePercent->setText(QString::number(vManager.getPersonIncome(database, person) * 100 / vManager.getTotalIncome(database), 'f', 2) + "%");
+}
+*/
+void MainWindow::on_personListSelectorWidget_itemClicked(QListWidgetItem *item)
+{
+    QString person = item->text();
+    ui->personExpensePercent->setText(QString::number(vManager.getPersonExpense(database, person) * 100 / vManager.getTotalExpense(database), 'f', 2) + "%");
     ui->personIncomePercent->setText(QString::number(vManager.getPersonIncome(database, person) * 100 / vManager.getTotalIncome(database), 'f', 2) + "%");
 }
 
@@ -255,14 +261,14 @@ void MainWindow::on_exportExpensesPushButton_clicked() //exporting expenses data
         try {
             e1.exportToTxt(filename);
         } catch (BadTableNameException &ex) {
-
+            e1.printFailure("Zła nazwa tabeli!!");
         }
     } else if (!filename.isEmpty() and filename.endsWith(".xlsx")) {
         TableExporter e2("expenses", database);
         try {
             e2.exportToExcel(filename);
         } catch (BadTableNameException &ex) {
-
+            e2.printFailure("Zła nazwa tabeli!!");
         }
     } else {
         QMessageBox errorBox;

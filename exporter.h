@@ -26,7 +26,6 @@ public:
 class TableExporter : public Exporter {
     QString tablename;
     dbManager dbm;
-
 public:
     void exportToTxt(QString filename) override;
     void exportToExcel(QString filename) override;
