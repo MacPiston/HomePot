@@ -1,7 +1,9 @@
 #include "exporter.h"
 #include "xlsxdocument.h"
+#include "xlsxchart.h"
 #include "fstream"
 #include "valuemanager.h"
+#include "iterator"
 #include <QMessageBox>
 #include <QDebug>
 
@@ -17,7 +19,7 @@ void SummaryExporter::exportToTxt(QString filename) {
         outputFile << "Total expense: " << totalExpense << "\n";
         outputFile << "Total income: " << totalIncome << "\n";
 
-        outputFile << "---- Persons ---- (expense income)\n";
+        outputFile << "---- Persons ---- (total expense/income)\n";
         for (auto p : persons) {
             outputFile << p.toStdString() << " : " << vm.getPersonExpense(dbm, p) << " " << vm.getPersonIncome(dbm, p) << "\n";
         }
@@ -31,6 +33,49 @@ void SummaryExporter::exportToTxt(QString filename) {
 
 void SummaryExporter::exportToExcel(QString filename) {
     QXlsx::Document xlsx;
+    QXlsx::Format mergeFormat;
+    QXlsx::Format boldFormat;
+    QStringList persons = vm.getPersonsArray(dbm);
+    mergeFormat.setHorizontalAlignment(QXlsx::Format::AlignHCenter);
+    mergeFormat.setVerticalAlignment(QXlsx::Format::AlignVCenter);
+    boldFormat.setFontBold(true);
+
+    xlsx.write("A1", "Summary:", boldFormat);
+    xlsx.mergeCells("A1:C1");
+
+    xlsx.write("A2", "Total expense", boldFormat);
+    xlsx.write("B2", vm.getTotalExpense(dbm));
+
+    xlsx.write("A3", "Total income", boldFormat);
+    xlsx.write("B3", vm.getTotalIncome(dbm));
+
+    xlsx.write("A4", "Persons", boldFormat);
+    xlsx.mergeCells("A4:C4", mergeFormat);
+    xlsx.write("A5", "Name", boldFormat);
+    xlsx.write("B5", "Total Expense", boldFormat);
+    xlsx.write("C5", "Total Income", boldFormat);
+
+    int row = 6;
+    for (int p = 0; p < persons.size(); p++, row++) {
+        xlsx.write(row, 1, persons[p]);
+        xlsx.write(row, 2, vm.getPersonExpense(dbm, persons[p]));
+        xlsx.write(row, 3, vm.getPersonIncome(dbm, persons[p]));
+    }
+    xlsx.autosizeColumnWidth();
+
+    xlsx.write(row, 1, "Exported on", boldFormat);
+    xlsx.write(row, 2, QDateTime::currentDateTime().toString("hh:mm dd.MM.yy"));
+
+    QXlsx::Chart *pieChart = xlsx.insertChart(3, 4, QSize(300, 300));
+    pieChart->setChartType(QXlsx::Chart::CT_PieChart);
+    pieChart->addSeries(QXlsx::CellRange("B2:B3"));
+    pieChart->setChartTitle("Summary");
+
+    if (xlsx.saveAs(filename)) {
+        printSuccess(filename);
+    } else {
+        printFailure("Failed to save .xlsx file");
+    }
 }
 
 SummaryExporter::SummaryExporter(dbManager dbMgr, valueManager vMgr) {
@@ -71,9 +116,10 @@ void TableExporter::exportToTxt(QString filename) {
                     personSum[person] += value;
                 }
             }
+
             outputFile << "-------- Summary --------\n";
-            for (auto element = personSum.begin(), end = personSum.end(); element != end; element = personSum.upper_bound(element->first)) {
-                outputFile << element->first << " " << element->second << "\n";
+            for (std::map<std::string, float>::iterator it = personSum.begin(), end = personSum.end(); it != end; it = personSum.upper_bound(it->first)) {
+                outputFile << it->first << " " << it->second << "\n";
             }
             outputFile << "Exported on: " << QDateTime::currentDateTime().toString("hh:mm dd.MM.yy").toStdString() << "\n";
 
@@ -93,7 +139,15 @@ void TableExporter::exportToExcel(QString filename) {
         query.prepare("SELECT * FROM " + tablename);
         if (query.exec()) {
             QXlsx::Document xlsx;
-            int rowCounter = 1;
+            QXlsx::Format boldFormat;
+            boldFormat.setFontBold(true);
+
+            xlsx.write(1, 1, "Name", boldFormat);
+            xlsx.write(1, 2, "Value", boldFormat);
+            xlsx.write(1, 3, "Category", boldFormat);
+            xlsx.write(1, 4, "Date", boldFormat);
+            xlsx.write(1, 5, "Person", boldFormat);
+            int rowCounter = 2;
 
             while (query.next()) {
                 xlsx.write(rowCounter, 1, query.value("name").toString());
@@ -105,6 +159,7 @@ void TableExporter::exportToExcel(QString filename) {
             }
 
             xlsx.currentSheet()->sheetName() = "Incomes";
+            xlsx.autosizeColumnWidth();
 
             if (xlsx.saveAs(filename)) {
                 printSuccess(filename);

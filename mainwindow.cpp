@@ -69,7 +69,7 @@ void MainWindow::loadSummaryData()
         ui->statusValue->setText("Good: " + QString::number(totalIncome - totalExpense));
         ui->statusValue->setStyleSheet("QLabel { background-color: green; color: black; border-radius: 9px}");
     }
-    loadPersonData(); //znowu się tu wypierdala..... edit: póki co nie
+    loadPersonData();
 }
 
 void MainWindow::loadPersonData()
@@ -77,8 +77,8 @@ void MainWindow::loadPersonData()
     ui->personListSelectorWidget->clear();
     ui->personListSelectorWidget->setLayoutMode(QListView::SinglePass);
     ui->personListSelectorWidget->addItems(vManager.getPersonsArray(database));
-    ui->personListSelectorWidget->sortItems(Qt::SortOrder::AscendingOrder);
-    ui->personListSelectorWidget->setSortingEnabled(true);
+    //ui->personListSelectorWidget->sortItems(Qt::SortOrder::AscendingOrder);
+    //ui->personListSelectorWidget->setSortingEnabled(true);
 }
 
 void MainWindow::loadIncomesTabData()
@@ -105,9 +105,9 @@ void MainWindow::loadExpensesTabData()
 void MainWindow::on_newPushButton_clicked() // new database creation
 {
     QString dbFilename = QFileDialog::getSaveFileName(this, tr("Create Budget Database"), tr("newBudget.sqlite"), tr("*.sqlite"));
-    database.createNewDatabase(dbFilename);
-    if (dbFilename != "")
+    if (!dbFilename.isEmpty())
     {
+        database.createNewDatabase(dbFilename);
         loadData();
         ui->budgetNameLabel->setText(dbFilename);
         switchEnabledElements(true);
@@ -117,9 +117,9 @@ void MainWindow::on_newPushButton_clicked() // new database creation
 void MainWindow::on_loadPushButton_clicked() // loading existing database
 {
     QString dbFilename = QFileDialog::getOpenFileName(this, tr("Open Budget Database"), tr(".../"), tr("*.sqlite"));
-    database.openExistingDatabase(dbFilename);
-    if (dbFilename != "")
+    if (!dbFilename.isEmpty())
     {   
+        database.openExistingDatabase(dbFilename);
         loadData();
         ui->budgetNameLabel->setText(dbFilename);
         switchEnabledElements(true);
@@ -146,6 +146,15 @@ void MainWindow::on_exportSummaryPushButton_clicked()
     if (!filename.isEmpty() and filename.endsWith(".txt")) {
         SummaryExporter s1(database, vManager);
         s1.exportToTxt(filename);
+    } else if (!filename.isEmpty() and filename.endsWith(".xlsx")) {
+        SummaryExporter s2(database, vManager);
+        s2.exportToExcel(filename);
+    } else if (!filename.isEmpty()) {
+        QMessageBox fileError;
+        fileError.setText("Failed to export!");
+        fileError.setDetailedText("Wrong file format selected");
+        fileError.setDefaultButton(QMessageBox::Ok);
+        fileError.exec();
     }
 
 }
